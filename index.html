@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Discover Fukushima: Vlog Vibe Quiz</title>
+    <title>British Hills Summer Camp Pre-Study</title>
     
     <!-- React & Tailwind Setup -->
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -14,13 +14,12 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Cinzel:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
     
-    <!-- Animation Styles -->
+    <!-- Styles -->
     <style>
         body {
             background-color: #fdfbf7; /* Cream */
             font-family: 'Patrick Hand', cursive;
             color: #234f32; /* Hunter Green */
-            overflow-x: hidden;
         }
         .font-cinzel { font-family: 'Cinzel', serif; }
         .font-hand { font-family: 'Patrick Hand', cursive; }
@@ -31,270 +30,80 @@
         .theme-gold { color: #c5a009; }
         .bg-theme-gold { background-color: #c5a009; }
         .border-theme-gold { border-color: #c5a009; }
-        
-        .fade-in { animation: fadeIn 0.5s ease-in; }
-        .slide-up { animation: slideUp 0.5s ease-out; }
-        
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        /* Custom Radio Button Styling */
-        .option-card:hover { transform: scale(1.02); }
-        .option-card.selected { 
-            border-color: #c5a009; 
-            background-color: #fffbef;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
+        .hover-card:hover { transform: translateY(-4px); }
+        .animate-fade-in { animation: fadeIn 0.8s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState } = React;
-
-        // --- Data: Questions & Results ---
-        
-        const questions = [
-            {
-                id: 1,
-                text: "When you watch YouTube, what keeps you watching?",
-                options: [
-                    { text: "Fast editing, jokes, and memes.", type: "comedy" },
-                    { text: "Beautiful scenery and relaxing music.", type: "aesthetic" },
-                    { text: "Learning cool facts and history.", type: "docu" },
-                    { text: "Crazy challenges and loud excitement!", type: "action" }
-                ]
-            },
-            {
-                id: 2,
-                text: "You are filming at Tsurugajou Castle. What is your main shot?",
-                options: [
-                    { text: "Me pretending to be a samurai fighting a ghost.", type: "comedy" },
-                    { text: "A slow-motion pan of the red roof tiles.", type: "aesthetic" },
-                    { text: "Explaining the history of the White Tigers.", type: "docu" },
-                    { text: "Running up the stairs to the top!", type: "action" }
-                ]
-            },
-            {
-                id: 3,
-                text: "Choose a background music style:",
-                options: [
-                    { text: "Goofy sound effects & upbeat pop.", type: "comedy" },
-                    { text: "Lo-Fi Beats to Study/Relax to.", type: "aesthetic" },
-                    { text: "Classical or cinematic orchestral.", type: "docu" },
-                    { text: "High-tempo rock or EDM.", type: "action" }
-                ]
-            },
-            {
-                id: 4,
-                text: "How do you want the audience to feel?",
-                options: [
-                    { text: "I want them to laugh!", type: "comedy" },
-                    { text: "I want them to wish they were there.", type: "aesthetic" },
-                    { text: "I want them to learn something new.", type: "docu" },
-                    { text: "I want them to feel pumped up!", type: "action" }
-                ]
-            },
-            {
-                id: 5,
-                text: "Your teammate makes a mistake while filming. What do you do?",
-                options: [
-                    { text: "Keep it in the video! It's funny!", type: "comedy" },
-                    { text: "Cut it out. We need perfection.", type: "aesthetic" },
-                    { text: "Explain why it happened. It's part of the process.", type: "docu" },
-                    { text: "Quickly film a reaction shot!", type: "action" }
-                ]
-            }
-        ];
-
-        const results = {
-            comedy: {
-                title: "The Entertainer",
-                subtitle: "High-Energy Comedy",
-                desc: "You believe that if it's not fun, it's not worth watching. Your vlog should be full of personality, jokes, and quick cuts. Don't be afraid to be silly!",
-                icon: "🎭",
-                color: "text-orange-600",
-                tips: ["Use 'Jump Cuts' for speed.", "Look directly at the lens.", "Add funny sound effects."]
-            },
-            aesthetic: {
-                title: "The Artist",
-                subtitle: "Serene Aesthetic",
-                desc: "You have an eye for beauty. Your video should focus on the atmosphere, colors, and textures of Fukushima. Let the visuals speak for themselves.",
-                icon: "✨",
-                color: "text-teal-600",
-                tips: ["Use slow-motion for B-Roll.", "Film during 'Golden Hour'.", "Pick a consistent color palette."]
-            },
-            docu: {
-                title: "The Storyteller",
-                subtitle: "Documentary Style",
-                desc: "You want to dig deeper. Your vlog should inform and inspire. Focus on the history, the people, and the 'Why' behind the locations.",
-                icon: "📜",
-                color: "text-blue-700",
-                tips: ["Write a clear script first.", "Interview locals if possible.", "Use text overlays for facts."]
-            },
-            action: {
-                title: "The Adventurer",
-                subtitle: "Action & Hype",
-                desc: "You bring the energy! Your video should feel like a journey. Focus on movement, travel, and the excitement of exploring new places.",
-                icon: "🚀",
-                color: "text-red-600",
-                tips: ["Use 'POV' (Point of View) shots.", "Walk while you talk.", "Keep the music loud and fast."]
-            }
-        };
-
-        // --- Components ---
-
-        const ProgressBar = ({ current, total }) => {
-            const width = ((current) / total) * 100;
-            return (
-                <div className="w-full bg-gray-200 h-2 rounded-full mb-6">
-                    <div 
-                        className="bg-theme-gold h-2 rounded-full transition-all duration-300 ease-out" 
-                        style={{ width: `${width}%` }}
-                    ></div>
-                </div>
-            );
-        };
-
         const App = () => {
-            const [screen, setScreen] = useState('start'); // start, quiz, result
-            const [currentQuestion, setCurrentQuestion] = useState(0);
-            const [scores, setScores] = useState({ comedy: 0, aesthetic: 0, docu: 0, action: 0 });
-            const [finalResult, setFinalResult] = useState(null);
-
-            const handleStart = () => {
-                setScreen('quiz');
-            };
-
-            const handleAnswer = (type) => {
-                const newScores = { ...scores, [type]: scores[type] + 1 };
-                setScores(newScores);
-
-                if (currentQuestion < questions.length - 1) {
-                    setCurrentQuestion(currentQuestion + 1);
-                } else {
-                    calculateResult(newScores);
-                }
-            };
-
-            const calculateResult = (finalScores) => {
-                // Find the key with the highest value
-                let maxScore = 0;
-                let resultType = 'comedy'; // default
-                
-                Object.keys(finalScores).forEach(key => {
-                    if (finalScores[key] > maxScore) {
-                        maxScore = finalScores[key];
-                        resultType = key;
-                    }
-                });
-                
-                setFinalResult(resultType);
-                setScreen('result');
-            };
-
-            const restart = () => {
-                setScores({ comedy: 0, aesthetic: 0, docu: 0, action: 0 });
-                setCurrentQuestion(0);
-                setScreen('start');
-            };
-
             return (
-                <div className="min-h-screen flex flex-col items-center justify-center p-4 max-w-md mx-auto relative">
-                    {/* Background decoration */}
-                    <div className="absolute top-0 left-0 w-full h-2 bg-theme-green"></div>
-                    <div className="absolute top-2 left-0 w-full h-1 bg-theme-gold"></div>
-
-                    {screen === 'start' && (
-                        <div className="text-center fade-in space-y-8">
-                            <div className="mb-6">
-                                <span className="text-6xl">🎥</span>
-                            </div>
-                            <div>
-                                <h1 className="text-4xl font-cinzel font-bold text-theme-green mb-2">What's Your Vibe?</h1>
-                                <p className="text-xl text-gray-600 font-marker">Discover your unique filmmaking style for the Fukushima project.</p>
-                            </div>
-                            <div className="p-6 bg-white rounded-lg shadow-lg border border-gray-100 transform rotate-1">
-                                <p className="text-lg text-gray-500 mb-4">Are you a comedian? An artist? A historian?</p>
-                                <button 
-                                    onClick={handleStart}
-                                    className="w-full bg-theme-green text-white font-cinzel font-bold py-4 px-8 rounded shadow hover:bg-[#1a3b25] transition-transform hover:scale-105"
-                                >
-                                    Start Quiz
-                                </button>
-                            </div>
+                <div className="min-h-screen flex flex-col">
+                    {/* Header */}
+                    <header className="bg-theme-green text-white p-8 text-center shadow-lg border-b-4 border-theme-gold relative overflow-hidden">
+                        <div className="relative z-10">
+                            <h1 className="text-3xl md:text-5xl font-cinzel font-bold text-theme-gold mb-2">British Hills Summer Camp</h1>
+                            <p className="font-marker text-xl md:text-2xl opacity-90 tracking-wider">Pre-Study Portal</p>
                         </div>
-                    )}
+                        {/* Decorative bg element */}
+                        <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none select-none">
+                            <div className="absolute -right-10 -top-10 text-9xl">🇬🇧</div>
+                            <div className="absolute -left-10 -bottom-10 text-9xl">🇯🇵</div>
+                        </div>
+                    </header>
 
-                    {screen === 'quiz' && (
-                        <div className="w-full fade-in">
-                            <div className="flex justify-between items-end mb-2 font-cinzel text-sm text-theme-green font-bold">
-                                <span>Question {currentQuestion + 1}</span>
-                                <span>{questions.length} Total</span>
+                    {/* Main Content */}
+                    <main className="flex-grow max-w-2xl mx-auto w-full p-6 space-y-12 mt-4">
+                        
+                        {/* Section 1: Vlog Project */}
+                        <section className="animate-fade-in">
+                            <div className="flex items-center gap-3 mb-6 border-b-2 border-theme-gold pb-2">
+                                <span className="text-2xl">🎥</span>
+                                <h2 className="text-3xl font-cinzel font-bold theme-green">Vlog Project Preparation</h2>
                             </div>
-                            <ProgressBar current={currentQuestion + 1} total={questions.length} />
                             
-                            <div className="bg-white p-6 rounded-lg shadow-xl border-t-4 border-theme-gold mb-6 relative">
-                                <h2 className="text-2xl font-bold mb-6 font-marker text-gray-800 leading-snug">
-                                    {questions[currentQuestion].text}
-                                </h2>
-                                
-                                <div className="space-y-3">
-                                    {questions[currentQuestion].options.map((option, idx) => (
-                                        <button
-                                            key={idx}
-                                            onClick={() => handleAnswer(option.type)}
-                                            className="w-full text-left p-4 rounded border-2 border-gray-100 hover:border-theme-gold hover:bg-[#fffbef] transition-all font-hand text-xl text-gray-700 active:scale-95"
-                                        >
-                                            {option.text}
-                                        </button>
-                                    ))}
-                                </div>
+                            <div className="grid gap-4">
+                                <a href="vlogvibequiz.html" className="group block">
+                                    <div className="bg-white p-6 rounded-lg shadow-md border-2 border-transparent hover:border-theme-gold transition-all duration-300 hover-card flex items-center justify-between">
+                                        <div>
+                                            <h3 className="text-2xl font-bold font-marker theme-green group-hover:text-theme-gold transition-colors">
+                                                What's Your "Vlog Vibe"?
+                                            </h3>
+                                            <p className="text-gray-600 font-hand text-lg mt-1">
+                                                Take the quiz to find your filmmaking style.
+                                            </p>
+                                        </div>
+                                        <div className="text-4xl group-hover:scale-110 transition-transform">👉</div>
+                                    </div>
+                                </a>
+                                {/* Future apps can go here */}
                             </div>
-                        </div>
-                    )}
+                        </section>
 
-                    {screen === 'result' && results[finalResult] && (
-                        <div className="text-center w-full slide-up">
-                            <div className="bg-white rounded-lg shadow-2xl overflow-hidden border-b-8 border-theme-green">
-                                <div className="bg-theme-green p-6 text-white relative overflow-hidden">
-                                    <div className="absolute top-0 right-0 text-8xl opacity-10 transform translate-x-4 -translate-y-4">
-                                        {results[finalResult].icon}
-                                    </div>
-                                    <p className="font-cinzel tracking-widest text-sm opacity-80 mb-2">YOUR STYLE IS</p>
-                                    <h2 className="text-3xl font-cinzel font-bold text-theme-gold">{results[finalResult].title}</h2>
-                                    <p className="font-marker text-xl mt-1 opacity-90">{results[finalResult].subtitle}</p>
-                                </div>
-                                
-                                <div className="p-8">
-                                    <div className="text-6xl mb-6">{results[finalResult].icon}</div>
-                                    <p className="text-lg text-gray-700 leading-relaxed font-hand mb-6">
-                                        {results[finalResult].desc}
-                                    </p>
-                                    
-                                    <div className="bg-[#fdfbf7] p-4 rounded border-dashed border-2 border-theme-gold text-left">
-                                        <h3 className="font-cinzel font-bold text-theme-green mb-2 text-sm uppercase">💡 Pro Tips for You:</h3>
-                                        <ul className="list-disc pl-5 space-y-1 text-gray-600">
-                                            {results[finalResult].tips.map((tip, idx) => (
-                                                <li key={idx}>{tip}</li>
-                                            ))}
-                                        </ul>
-                                    </div>
-
-                                    <div className="mt-8 space-y-3">
-                                        <p className="text-sm text-gray-400 font-sans">Take a screenshot and share with your team!</p>
-                                        <button 
-                                            onClick={restart}
-                                            className="text-theme-green font-bold hover:underline"
-                                        >
-                                            Retake Quiz
-                                        </button>
-                                    </div>
-                                </div>
+                        {/* Section 2: Camp Preparation */}
+                        <section className="opacity-75">
+                            <div className="flex items-center gap-3 mb-6 border-b-2 border-gray-300 pb-2">
+                                <span className="text-2xl">🎒</span>
+                                <h2 className="text-3xl font-cinzel font-bold text-gray-500">Camp Preparation</h2>
                             </div>
-                        </div>
-                    )}
+                            
+                            <div className="bg-[#f0eee9] p-8 rounded-lg border-2 border-dashed border-gray-300 text-center">
+                                <p className="text-xl text-gray-500 font-marker">
+                                    Apps & Games coming soon...
+                                </p>
+                            </div>
+                        </section>
+
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="text-center p-6 text-theme-green opacity-60 font-cinzel text-sm">
+                        &copy; British Hills Summer Camp
+                    </footer>
                 </div>
             );
         };
