@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Virtual Recce: Location Scout</title>
+    <title>Virtual Reconnaissance: Location Scout</title>
     
     <!-- React & Tailwind Setup -->
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Library for saving images -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Cinzel:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
@@ -93,7 +96,7 @@
                 ],
                 reward: {
                     target: "The Food Reaction",
-                    note: "You MUST film your teammate trying to eat noodles with a leek. Capture their reaction!"
+                    note: "Try filming your teammate trying to eat noodles with a leek. Capture their reaction!"
                 }
             },
             {
@@ -155,6 +158,11 @@
                 setView('mission');
             };
 
+            const replayMission = () => {
+                setQuizIndex(0);
+                setView('mission');
+            };
+
             const handleLogin = (e) => {
                 e.preventDefault();
                 if(scoutName.trim()) setView('dashboard');
@@ -174,6 +182,24 @@
                     }
                 } else {
                     alert("⚠️ Research Incorrect. Try again!");
+                }
+            };
+            
+            const handleSavePhoto = () => {
+                const element = document.getElementById('certificate-card');
+                if (window.html2canvas) {
+                    // Use html2canvas to take a picture of the ID card div
+                    window.html2canvas(element, { scale: 2, backgroundColor: null }).then(canvas => {
+                        const link = document.createElement('a');
+                        link.download = `Scout_ID_${scoutName.replace(/\s+/g, '_')}.png`;
+                        link.href = canvas.toDataURL("image/png");
+                        link.click();
+                    }).catch(err => {
+                        console.error(err);
+                        alert("Auto-save failed. Please take a screenshot manually!");
+                    });
+                } else {
+                    alert("Please take a screenshot of your ID card manually.");
                 }
             };
 
@@ -271,16 +297,25 @@
 
                         {/* Final Certification */}
                         {getProgress() === 100 && (
-                            <div className="text-center mt-8 animate-fade-in">
-                                <div className="bg-theme-gold p-8 rounded text-black shadow-lg border-4 border-white">
-                                    <h2 className="text-2xl font-cinzel font-bold mb-2 text-white">READY TO FILM</h2>
+                            <div className="text-center mt-8 animate-fade-in pb-10">
+                                {/* Only this part gets photographed */}
+                                <div id="certificate-card" className="bg-theme-gold p-8 rounded text-black shadow-lg border-4 border-white max-w-sm mx-auto relative overflow-hidden">
+                                     {/* Background decoration */}
+                                    <div className="absolute top-0 left-0 w-full h-2 bg-theme-green"></div>
+                                    
+                                    <div className="text-4xl mb-2">🎓</div>
+                                    <h2 className="text-2xl font-cinzel font-bold mb-2 text-white drop-shadow-md">READY TO FILM</h2>
                                     <p className="font-hand text-xl mb-4 text-[#fdfbf7]">Scout {scoutName} is fully prepared.</p>
-                                    <button onClick={() => window.print()} className="bg-theme-green text-white px-6 py-2 rounded font-bold hover:bg-[#1a3b25] font-cinzel">
-                                        PRINT ID CARD
-                                    </button>
+                                    <div className="text-xs font-cinzel text-white opacity-90 mt-4 tracking-widest border-t border-white/30 pt-4">BRITISH HILLS SUMMER CAMP</div>
                                 </div>
-                                <div className="mt-4">
-                                     <a href="index.html" className="text-gray-400 hover:text-theme-green underline font-hand">Return to Hub</a>
+
+                                <button onClick={handleSavePhoto} className="mt-6 w-full max-w-sm bg-theme-green text-white px-6 py-4 rounded font-bold hover:bg-[#1a3b25] font-cinzel shadow-lg flex items-center justify-center gap-2 text-lg">
+                                    📸 SAVE ID CARD PHOTO
+                                </button>
+                                <p className="text-gray-400 text-sm mt-2 italic">(Or take a screenshot if it doesn't save!)</p>
+                                
+                                <div className="mt-6 border-t border-gray-200 pt-6">
+                                     <a href="index.html" className="text-gray-400 hover:text-theme-green underline font-hand text-lg">Return to Hub</a>
                                 </div>
                             </div>
                         )}
@@ -341,12 +376,20 @@
                                 <div className="text-lg font-hand text-gray-600 italic">"{mission.reward.note}"</div>
                             </div>
 
-                            <button 
-                                onClick={() => setView('dashboard')}
-                                className="w-full bg-theme-green text-white font-bold py-3 rounded hover:bg-[#1a3b25] transition-colors font-cinzel"
-                            >
-                                RETURN TO MAP
-                            </button>
+                            <div className="space-y-3">
+                                <button 
+                                    onClick={() => setView('dashboard')}
+                                    className="w-full bg-theme-green text-white font-bold py-3 rounded hover:bg-[#1a3b25] transition-colors font-cinzel"
+                                >
+                                    RETURN TO MAP
+                                </button>
+                                <button 
+                                    onClick={replayMission}
+                                    className="w-full bg-white text-theme-green border-2 border-theme-green font-bold py-3 rounded hover:bg-[#f0f9f4] transition-colors font-cinzel"
+                                >
+                                    TAKE QUIZ AGAIN
+                                </button>
+                            </div>
                         </div>
                     </div>
                 );
