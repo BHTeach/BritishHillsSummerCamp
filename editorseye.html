@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The Editor's Eye: Vocabulary Challenge</title>
+    
+    <!-- React & Tailwind Setup -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Cinzel:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #234f32; /* Hunter Green Background for this app */
+            font-family: 'Patrick Hand', cursive;
+            color: #fdfbf7;
+        }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .font-hand { font-family: 'Patrick Hand', cursive; }
+        .font-marker { font-family: 'Architects Daughter', cursive; }
+        
+        .theme-green { color: #234f32; }
+        .bg-theme-green { background-color: #234f32; }
+        .theme-gold { color: #c5a009; }
+        .bg-theme-gold { background-color: #c5a009; }
+        .border-theme-gold { border-color: #c5a009; }
+        
+        .cream-bg { background-color: #fdfbf7; color: #234f32; }
+
+        /* Video Container */
+        .video-frame {
+            border: 4px solid #c5a009;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            background: #000;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useRef, useEffect } = React;
+
+        // --- Configuration ---
+        const VIDEO_PATH = "./assets/"; 
+
+        // --- Data: The Shot List ---
+        const shotData = [
+            {
+                file: "pan.mp4",
+                term: "Pan",
+                desc: "Camera stays still but rotates horizontally.",
+                options: ["Pan", "Tilt", "Tracking Shot", "Dutch Angle"]
+            },
+            {
+                file: "tilt.mp4",
+                term: "Tilt",
+                desc: "Camera stays still but rotates vertically (up/down).",
+                options: ["Tilt", "Pan", "Zoom In", "Establishing Shot"]
+            },
+            {
+                file: "trackingfront.mp4",
+                term: "Tracking Shot",
+                desc: "The camera moves through space with the subject.",
+                options: ["Tracking Shot", "Pan", "Zoom Out", "Two Shot"]
+            },
+            {
+                file: "broll.mp4",
+                term: "B-Roll",
+                desc: "Extra footage used to set the scene or show detail.",
+                options: ["B-Roll", "A-Roll", "Selfie Mode", "Establishing Shot"]
+            },
+            {
+                file: "whip.mp4",
+                term: "Whip Pan",
+                desc: "A very fast pan that blurs the image.",
+                options: ["Whip Pan", "Fast Cut", "Tracking Shot", "Dutch Angle"]
+            },
+            {
+                file: "lowangle.mp4",
+                term: "Low Angle",
+                desc: "Looking up at the subject to make them look powerful.",
+                options: ["Low Angle", "High Angle", "Dutch Angle", "POV"]
+            },
+            {
+                file: "dutchangle.mp4",
+                term: "Dutch Angle",
+                desc: "Tilted horizon line to create unease or style.",
+                options: ["Dutch Angle", "French Angle", "Tilt", "Low Angle"]
+            },
+            {
+                file: "establishingshot.mp4",
+                term: "Establishing Shot",
+                desc: "A wide shot that tells the audience WHERE we are.",
+                options: ["Establishing Shot", "Two Shot", "Selfie Mode", "Close Up"]
+            },
+            {
+                file: "2shot.mp4",
+                term: "Two Shot",
+                desc: "A frame containing two people.",
+                options: ["Two Shot", "Over the Shoulder", "POV", "Group Shot"]
+            },
+            {
+                file: "overtheshoulder.mp4",
+                term: "Over the Shoulder",
+                desc: "Looking past one person to see the other.",
+                options: ["Over the Shoulder", "Two Shot", "POV", "Tracking Shot"]
+            },
+            {
+                file: "pov.mp4",
+                term: "POV (Point of View)",
+                desc: "Seeing through the character's eyes.",
+                options: ["POV (Point of View)", "Selfie Mode", "Low Angle", "Tracking Shot"]
+            },
+            {
+                file: "zoomin.mp4",
+                term: "Zoom In",
+                desc: "The lens changes to get closer (camera stays still).",
+                options: ["Zoom In", "Tracking Shot", "Dolly In", "Tilt"]
+            }
+        ];
+
+        // Shuffle function for randomizing question order
+        const shuffleArray = (array) => {
+            return array.sort(() => Math.random() - 0.5);
+        };
+
+        const App = () => {
+            const [gameStatus, setGameStatus] = useState('start'); // start, playing, summary
+            const [queue, setQueue] = useState([]);
+            const [currentIndex, setCurrentIndex] = useState(0);
+            const [score, setScore] = useState(0);
+            const [feedback, setFeedback] = useState(null); // null, 'correct', 'wrong'
+
+            const startGame = () => {
+                const shuffled = shuffleArray([...shotData]);
+                setQueue(shuffled);
+                setCurrentIndex(0);
+                setScore(0);
+                setGameStatus('playing');
+                setFeedback(null);
+            };
+
+            const handleAnswer = (selectedOption) => {
+                const currentShot = queue[currentIndex];
+                const isCorrect = selectedOption === currentShot.term;
+
+                if (isCorrect) {
+                    setFeedback('correct');
+                    setScore(prev => prev + 1);
+                } else {
+                    setFeedback('wrong');
+                }
+
+                // Wait 1.5 seconds then go to next
+                setTimeout(() => {
+                    if (currentIndex < queue.length - 1) {
+                        setCurrentIndex(prev => prev + 1);
+                        setFeedback(null);
+                    } else {
+                        setGameStatus('summary');
+                    }
+                }, 1500);
+            };
+
+            // Calculate progress percentage
+            const progress = queue.length > 0 ? ((currentIndex) / queue.length) * 100 : 0;
+
+            return (
+                <div className="min-h-screen flex flex-col items-center p-4 max-w-lg mx-auto">
+                    
+                    {/* --- HEADER --- */}
+                    <div className="w-full text-center mb-6 mt-4">
+                        <h1 className="text-3xl font-cinzel text-theme-gold font-bold">The Editor's Eye</h1>
+                        <p className="opacity-80 font-hand">Vocabulary Challenge</p>
+                    </div>
+
+                    {/* --- START SCREEN --- */}
+                    {gameStatus === 'start' && (
+                        <div className="cream-bg p-8 rounded-lg shadow-2xl text-center w-full animate-fade-in border-4 border-theme-gold">
+                            <div className="text-6xl mb-4">🎬</div>
+                            <h2 className="text-2xl font-bold font-marker theme-green mb-4">Ready to test your knowledge?</h2>
+                            <p className="mb-6 text-gray-700">Watch the clips and identify the correct filming technique.</p>
+                            <button 
+                                onClick={startGame}
+                                className="bg-theme-green text-white text-xl py-3 px-8 rounded hover:bg-[#15301e] transition-transform hover:scale-105 font-cinzel font-bold border-2 border-theme-gold"
+                            >
+                                Start Action
+                            </button>
+                        </div>
+                    )}
+
+                    {/* --- GAMEPLAY SCREEN --- */}
+                    {gameStatus === 'playing' && queue.length > 0 && (
+                        <div className="w-full">
+                            {/* Progress Bar */}
+                            <div className="w-full bg-[#1a3b25] h-2 rounded-full mb-4">
+                                <div 
+                                    className="bg-theme-gold h-2 rounded-full transition-all duration-300" 
+                                    style={{ width: `${progress}%` }}
+                                ></div>
+                            </div>
+
+                            {/* Video Display */}
+                            <div className="video-frame rounded-lg overflow-hidden aspect-video bg-black mb-6 relative">
+                                <video 
+                                    key={queue[currentIndex].file} // Key forces reload on change
+                                    src={`${VIDEO_PATH}${queue[currentIndex].file}`}
+                                    className="w-full h-full object-cover"
+                                    autoPlay 
+                                    loop 
+                                    muted 
+                                    playsInline
+                                />
+                                
+                                {/* Feedback Overlay */}
+                                {feedback && (
+                                    <div className={`absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-80 backdrop-blur-sm z-10 transition-opacity ${feedback === 'correct' ? 'text-green-400' : 'text-red-400'}`}>
+                                        <div className="text-6xl mb-2">
+                                            {feedback === 'correct' ? '✅' : '❌'}
+                                        </div>
+                                        <div className="font-cinzel font-bold text-2xl text-white">
+                                            {feedback === 'correct' ? 'Correct!' : 'Cut! Try Again.'}
+                                        </div>
+                                        {feedback === 'correct' && (
+                                            <p className="text-white font-hand mt-2 px-4 text-center opacity-90">
+                                                {queue[currentIndex].desc}
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Options */}
+                            <div className="grid grid-cols-1 gap-3">
+                                {shuffleArray([...queue[currentIndex].options]).map((opt, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => !feedback && handleAnswer(opt)}
+                                        disabled={!!feedback}
+                                        className={`p-4 rounded text-lg font-bold font-hand transition-all transform active:scale-95
+                                            ${feedback 
+                                                ? 'bg-gray-600 text-gray-400 cursor-not-allowed' 
+                                                : 'bg-[#fdfbf7] text-[#234f32] hover:bg-theme-gold hover:text-white border-2 border-transparent hover:border-white'
+                                            }
+                                        `}
+                                    >
+                                        {opt}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* --- SUMMARY SCREEN --- */}
+                    {gameStatus === 'summary' && (
+                        <div className="cream-bg p-8 rounded-lg shadow-2xl text-center w-full animate-fade-in border-4 border-theme-gold mt-10">
+                            <h2 className="text-3xl font-cinzel font-bold theme-green mb-2">It's a Wrap!</h2>
+                            
+                            <div className="text-6xl font-marker theme-gold my-6">
+                                {score} / {queue.length}
+                            </div>
+
+                            <p className="mb-8 text-gray-700 font-hand text-xl">
+                                {score === queue.length 
+                                    ? "Perfect Score! You are ready to direct." 
+                                    : "Good practice. Review the terms and try again!"}
+                            </p>
+
+                            <div className="space-y-4">
+                                <button 
+                                    onClick={startGame}
+                                    className="w-full bg-theme-green text-white py-3 rounded font-bold hover:opacity-90 transition"
+                                >
+                                    Replay Scene
+                                </button>
+                                <a 
+                                    href="index.html"
+                                    className="block w-full border-2 border-theme-green text-theme-green py-3 rounded font-bold hover:bg-theme-green hover:text-white transition"
+                                >
+                                    Back to Hub
+                                </a>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="mt-8 text-xs opacity-40 font-cinzel text-center">
+                        British Hills Summer Project
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
