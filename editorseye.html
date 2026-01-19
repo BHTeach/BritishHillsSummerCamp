@@ -16,7 +16,7 @@
     
     <style>
         body {
-            background-color: #234f32; /* Hunter Green Background for this app */
+            background-color: #234f32; /* Hunter Green Background */
             font-family: 'Patrick Hand', cursive;
             color: #fdfbf7;
         }
@@ -38,13 +38,18 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             background: #000;
         }
+
+        /* Scrollbar for Study Hub */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #234f32; }
+        ::-webkit-scrollbar-thumb { background: #c5a009; border-radius: 3px; }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useRef, useEffect } = React;
+        const { useState, useEffect } = React;
 
         // --- Configuration ---
         const VIDEO_PATH = "./assets/"; 
@@ -54,73 +59,73 @@
             {
                 file: "pan.mp4",
                 term: "Pan",
-                desc: "Camera stays still but rotates horizontally.",
+                desc: "Camera stays still but rotates horizontally (left/right). Used to scan a landscape.",
                 options: ["Pan", "Tilt", "Tracking Shot", "Dutch Angle"]
             },
             {
                 file: "tilt.mp4",
                 term: "Tilt",
-                desc: "Camera stays still but rotates vertically (up/down).",
+                desc: "Camera stays still but rotates vertically (up/down). Used to reveal tall objects.",
                 options: ["Tilt", "Pan", "Zoom In", "Establishing Shot"]
             },
             {
                 file: "trackingfront.mp4",
                 term: "Tracking Shot",
-                desc: "The camera moves through space with the subject.",
+                desc: "The camera physically moves through space with the subject.",
                 options: ["Tracking Shot", "Pan", "Zoom Out", "Two Shot"]
             },
             {
                 file: "broll.mp4",
                 term: "B-Roll",
-                desc: "Extra footage used to set the scene or show detail.",
+                desc: "Extra footage used to set the scene, show details, or hide edits.",
                 options: ["B-Roll", "A-Roll", "Selfie Mode", "Establishing Shot"]
             },
             {
                 file: "whip.mp4",
                 term: "Whip Pan",
-                desc: "A very fast pan that blurs the image.",
+                desc: "A very fast pan that blurs the image. Often used as a cool transition.",
                 options: ["Whip Pan", "Fast Cut", "Tracking Shot", "Dutch Angle"]
             },
             {
                 file: "lowangle.mp4",
                 term: "Low Angle",
-                desc: "Looking up at the subject to make them look powerful.",
+                desc: "Looking up at the subject from below. Makes them look powerful or heroic.",
                 options: ["Low Angle", "High Angle", "Dutch Angle", "POV"]
             },
             {
                 file: "dutchangle.mp4",
                 term: "Dutch Angle",
-                desc: "Tilted horizon line to create unease or style.",
+                desc: "Tilted horizon line. Creates a feeling of unease, chaos, or artistic style.",
                 options: ["Dutch Angle", "French Angle", "Tilt", "Low Angle"]
             },
             {
                 file: "establishingshot.mp4",
                 term: "Establishing Shot",
-                desc: "A wide shot that tells the audience WHERE we are.",
+                desc: "A wide shot usually shown at the start. It tells the audience WHERE we are.",
                 options: ["Establishing Shot", "Two Shot", "Selfie Mode", "Close Up"]
             },
             {
                 file: "2shot.mp4",
                 term: "Two Shot",
-                desc: "A frame containing two people.",
+                desc: "A frame containing two people. Shows their relationship.",
                 options: ["Two Shot", "Over the Shoulder", "POV", "Group Shot"]
             },
             {
                 file: "overtheshoulder.mp4",
                 term: "Over the Shoulder",
-                desc: "Looking past one person to see the other.",
+                desc: "Looking past one person's shoulder to see the other person talking.",
                 options: ["Over the Shoulder", "Two Shot", "POV", "Tracking Shot"]
             },
             {
                 file: "pov.mp4",
                 term: "POV (Point of View)",
-                desc: "Seeing through the character's eyes.",
+                desc: "The camera sees exactly what the character sees (eyes of the character).",
                 options: ["POV (Point of View)", "Selfie Mode", "Low Angle", "Tracking Shot"]
             },
             {
                 file: "zoomin.mp4",
                 term: "Zoom In",
-                desc: "The lens changes to get closer (camera stays still).",
+                desc: "The lens changes focal length to get closer without moving the camera.",
                 options: ["Zoom In", "Tracking Shot", "Dolly In", "Tilt"]
             }
         ];
@@ -131,12 +136,15 @@
         };
 
         const App = () => {
-            const [gameStatus, setGameStatus] = useState('start'); // start, playing, summary
+            // States: start, study_hub, study_viewer, playing, summary
+            const [gameStatus, setGameStatus] = useState('start'); 
             const [queue, setQueue] = useState([]);
             const [currentIndex, setCurrentIndex] = useState(0);
             const [score, setScore] = useState(0);
-            const [feedback, setFeedback] = useState(null); // null, 'correct', 'wrong'
+            const [feedback, setFeedback] = useState(null); 
+            const [studyItem, setStudyItem] = useState(null);
 
+            // --- Game Logic ---
             const startGame = () => {
                 const shuffled = shuffleArray([...shotData]);
                 setQueue(shuffled);
@@ -157,7 +165,6 @@
                     setFeedback('wrong');
                 }
 
-                // Wait 1.5 seconds then go to next
                 setTimeout(() => {
                     if (currentIndex < queue.length - 1) {
                         setCurrentIndex(prev => prev + 1);
@@ -168,30 +175,97 @@
                 }, 1500);
             };
 
-            // Calculate progress percentage
+            // --- Study Logic ---
+            const openStudyHub = () => {
+                setGameStatus('study_hub');
+            };
+
+            const openStudyViewer = (item) => {
+                setStudyItem(item);
+                setGameStatus('study_viewer');
+            };
+
+            const backToMenu = () => {
+                setGameStatus('start');
+            };
+
+            // Progress bar calc
             const progress = queue.length > 0 ? ((currentIndex) / queue.length) * 100 : 0;
 
             return (
-                <div className="min-h-screen flex flex-col items-center p-4 max-w-lg mx-auto">
+                <div className="min-h-screen flex flex-col items-center p-4 max-w-lg mx-auto relative">
                     
                     {/* --- HEADER --- */}
-                    <div className="w-full text-center mb-6 mt-4">
+                    <div className="w-full text-center mb-6 mt-4 z-10">
                         <h1 className="text-3xl font-cinzel text-theme-gold font-bold">The Editor's Eye</h1>
                         <p className="opacity-80 font-hand">Vocabulary Challenge</p>
                     </div>
 
                     {/* --- START SCREEN --- */}
                     {gameStatus === 'start' && (
-                        <div className="cream-bg p-8 rounded-lg shadow-2xl text-center w-full animate-fade-in border-4 border-theme-gold">
-                            <div className="text-6xl mb-4">🎬</div>
-                            <h2 className="text-2xl font-bold font-marker theme-green mb-4">Ready to test your knowledge?</h2>
-                            <p className="mb-6 text-gray-700">Watch the clips and identify the correct filming technique.</p>
-                            <button 
-                                onClick={startGame}
-                                className="bg-theme-green text-white text-xl py-3 px-8 rounded hover:bg-[#15301e] transition-transform hover:scale-105 font-cinzel font-bold border-2 border-theme-gold"
-                            >
-                                Start Action
-                            </button>
+                        <div className="cream-bg p-8 rounded-lg shadow-2xl text-center w-full animate-fade-in border-4 border-theme-gold space-y-6">
+                            <div className="text-6xl mb-2">🎬</div>
+                            <h2 className="text-2xl font-bold font-marker theme-green">Welcome, Director.</h2>
+                            <p className="text-gray-700">Master the visual language before you start filming.</p>
+                            
+                            <div className="grid gap-4 mt-6">
+                                <button 
+                                    onClick={openStudyHub}
+                                    className="bg-white border-2 border-theme-green text-theme-green text-xl py-3 rounded font-cinzel font-bold hover:bg-theme-green hover:text-white transition-colors flex items-center justify-center gap-2"
+                                >
+                                    <span>📖</span> Study the Script
+                                </button>
+                                <button 
+                                    onClick={startGame}
+                                    className="bg-theme-green text-white text-xl py-3 rounded hover:bg-[#15301e] transition-transform hover:scale-105 font-cinzel font-bold border-2 border-theme-gold flex items-center justify-center gap-2"
+                                >
+                                    <span>🎥</span> Start Action
+                                </button>
+                            </div>
+                            <div className="mt-4 border-t border-gray-300 pt-4">
+                                <a href="index.html" className="text-gray-500 font-bold hover:text-theme-green text-sm">← Back to Main Hub</a>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* --- STUDY HUB (Grid View) --- */}
+                    {gameStatus === 'study_hub' && (
+                        <div className="w-full animate-fade-in flex flex-col h-full">
+                            <button onClick={backToMenu} className="self-start text-theme-gold font-bold mb-4 font-cinzel">← Back to Menu</button>
+                            <div className="grid grid-cols-2 gap-3 pb-8">
+                                {shotData.map((shot, idx) => (
+                                    <button 
+                                        key={idx}
+                                        onClick={() => openStudyViewer(shot)}
+                                        className="bg-[#fdfbf7] p-3 rounded border-2 border-transparent hover:border-theme-gold shadow text-center hover:scale-105 transition-all"
+                                    >
+                                        <div className="text-3xl mb-1">📹</div>
+                                        <div className="font-marker theme-green font-bold leading-tight">{shot.term}</div>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* --- STUDY VIEWER (Detail View) --- */}
+                    {gameStatus === 'study_viewer' && studyItem && (
+                        <div className="w-full animate-fade-in">
+                             <button onClick={openStudyHub} className="self-start text-theme-gold font-bold mb-4 font-cinzel">← Back to List</button>
+                             
+                             <div className="video-frame rounded-lg overflow-hidden aspect-video bg-black mb-4">
+                                <video 
+                                    src={`${VIDEO_PATH}${studyItem.file}`}
+                                    className="w-full h-full object-cover"
+                                    autoPlay loop muted playsInline
+                                />
+                            </div>
+
+                            <div className="cream-bg p-6 rounded-lg shadow border-l-4 border-theme-gold">
+                                <h2 className="text-3xl font-cinzel font-bold theme-green mb-2">{studyItem.term}</h2>
+                                <p className="text-xl font-hand text-gray-800 leading-relaxed">
+                                    {studyItem.desc}
+                                </p>
+                            </div>
                         </div>
                     )}
 
@@ -209,13 +283,10 @@
                             {/* Video Display */}
                             <div className="video-frame rounded-lg overflow-hidden aspect-video bg-black mb-6 relative">
                                 <video 
-                                    key={queue[currentIndex].file} // Key forces reload on change
+                                    key={queue[currentIndex].file} 
                                     src={`${VIDEO_PATH}${queue[currentIndex].file}`}
                                     className="w-full h-full object-cover"
-                                    autoPlay 
-                                    loop 
-                                    muted 
-                                    playsInline
+                                    autoPlay loop muted playsInline
                                 />
                                 
                                 {/* Feedback Overlay */}
@@ -227,11 +298,6 @@
                                         <div className="font-cinzel font-bold text-2xl text-white">
                                             {feedback === 'correct' ? 'Correct!' : 'Cut! Try Again.'}
                                         </div>
-                                        {feedback === 'correct' && (
-                                            <p className="text-white font-hand mt-2 px-4 text-center opacity-90">
-                                                {queue[currentIndex].desc}
-                                            </p>
-                                        )}
                                     </div>
                                 )}
                             </div>
@@ -279,12 +345,12 @@
                                 >
                                     Replay Scene
                                 </button>
-                                <a 
-                                    href="index.html"
-                                    className="block w-full border-2 border-theme-green text-theme-green py-3 rounded font-bold hover:bg-theme-green hover:text-white transition"
+                                <button 
+                                    onClick={backToMenu}
+                                    className="w-full border-2 border-theme-green text-theme-green py-3 rounded font-bold hover:bg-theme-green hover:text-white transition"
                                 >
-                                    Back to Hub
-                                </a>
+                                    Main Menu
+                                </button>
                             </div>
                         </div>
                     )}
