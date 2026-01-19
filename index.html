@@ -112,16 +112,31 @@
                         </section>
 
                         {/* Section 2: Camp Preparation */}
-                        <section className="opacity-75">
-                            <div className="flex items-center gap-3 mb-6 border-b-2 border-gray-300 pb-2">
+                        <section className="animate-fade-in">
+                            <div className="flex items-center gap-3 mb-6 border-b-2 border-theme-gold pb-2">
                                 <span className="text-2xl">🎒</span>
-                                <h2 className="text-3xl font-cinzel font-bold text-gray-500">Camp Preparation</h2>
+                                <h2 className="text-3xl font-cinzel font-bold theme-green">Camp Preparation</h2>
                             </div>
                             
-                            <div className="bg-[#f0eee9] p-8 rounded-lg border-2 border-dashed border-gray-300 text-center">
-                                <p className="text-xl text-gray-500 font-marker">
-                                    Apps & Games coming soon...
-                                </p>
+                            <div className="grid gap-4">
+                                <a 
+                                    href="https://invitation.visitbritishhills.com/Long-Camp-Welcome/camp-welcome.html" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="group block"
+                                >
+                                    <div className="bg-white p-6 rounded-lg shadow-md border-2 border-transparent hover:border-theme-gold transition-all duration-300 hover-card flex items-center justify-between">
+                                        <div>
+                                            <h3 className="text-2xl font-bold font-marker theme-green group-hover:text-theme-gold transition-colors">
+                                                Tell us who you are!
+                                            </h3>
+                                            <p className="text-gray-600 font-hand text-lg mt-1">
+                                                Please complete the pre-camp welcome questionnaire.
+                                            </p>
+                                        </div>
+                                        <div className="text-4xl group-hover:scale-110 transition-transform">👋</div>
+                                    </div>
+                                </a>
                             </div>
                         </section>
 
