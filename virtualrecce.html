@@ -163,6 +163,19 @@
                 setView('mission');
             };
 
+            const handleFolderClick = (m, isLocked, isComplete) => {
+                if (isLocked) return;
+                
+                if (isComplete) {
+                    // If complete, show the reward/info screen (where they can also retake quiz)
+                    setCurrentMissionId(m.id);
+                    setView('reward');
+                } else {
+                    // If not complete, start the quiz
+                    startMission(m.id);
+                }
+            };
+
             const handleLogin = (e) => {
                 e.preventDefault();
                 if(scoutName.trim()) setView('dashboard');
@@ -188,7 +201,6 @@
             const handleSavePhoto = () => {
                 const element = document.getElementById('certificate-card');
                 if (window.html2canvas) {
-                    // Use html2canvas to take a picture of the ID card div
                     window.html2canvas(element, { scale: 2, backgroundColor: null }).then(canvas => {
                         const link = document.createElement('a');
                         link.download = `Scout_ID_${scoutName.replace(/\s+/g, '_')}.png`;
@@ -262,9 +274,9 @@
                             return (
                                 <button 
                                     key={m.id}
-                                    onClick={() => !isLocked && !isComplete && startMission(m.id)}
-                                    disabled={isLocked || isComplete}
-                                    className={`w-full text-left relative group transition-all duration-300 ${isComplete ? 'opacity-90' : ''}`}
+                                    onClick={() => handleFolderClick(m, isLocked, isComplete)}
+                                    disabled={isLocked}
+                                    className={`w-full text-left relative group transition-all duration-300 ${isLocked ? 'opacity-100' : 'hover:scale-[1.02]'}`}
                                 >
                                     {/* Folder Tab Look */}
                                     <div className={`w-32 h-6 rounded-t-lg mx-auto relative z-10 notebook-tab ${isComplete ? 'bg-theme-green' : isLocked ? 'bg-gray-400' : 'bg-theme-gold'}`}>
