@@ -151,11 +151,45 @@
         // ==========================================
         // 1. DATA CONFIGURATION
         // ==========================================
-        // Edit this array to add/remove staff or change questions.
-        // Filenames are automatically assumed based on name + action, but can be overridden.
         
         const staffData = [
-            // --- STAFF WITH VIDEO CONTENT READY ---
+            // --- TOP PRIORITY ---
+            {
+                id: "ben",
+                name: "Ben",
+                role: "Teacher",
+                image: "assets/meetthestaffvids/ben.jpg",
+                introVideo: "assets/meetthestaffvids/ben_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/meetthestaffvids/ben_q1.mp4" },
+                    { text: "What's your favourite TV show?", video: "assets/meetthestaffvids/ben_q2.mp4" },
+                    { text: "What are your hobbies?", video: "assets/meetthestaffvids/ben_q3.mp4" }
+                ]
+            },
+            {
+                id: "marcus",
+                name: "Marcus",
+                role: "Teacher",
+                image: "assets/meetthestaffvids/marcus.jpg", 
+                introVideo: "assets/meetthestaffvids/marcus_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/meetthestaffvids/marcus_q1.mp4" },
+                    { text: "What is your favourite place in Japan?", video: "assets/meetthestaffvids/marcus_q2.mp4" },
+                    { text: "What's your favourite food?", video: "assets/meetthestaffvids/marcus_q3.mp4" }
+                ]
+            },
+            {
+                id: "donovan",
+                name: "Donovan",
+                role: "Teacher",
+                image: "assets/meetthestaffvids/donovan.jpg",
+                introVideo: "assets/meetthestaffvids/donovan_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/meetthestaffvids/donovan_q1.mp4" },
+                    { text: "What is your favourite place in Japan?", video: "assets/meetthestaffvids/donovan_q2.mp4" },
+                    { text: "What are your hobbies?", video: "assets/meetthestaffvids/donovan_q3.mp4" }
+                ]
+            },
             {
                 id: "luke",
                 name: "Luke",
@@ -189,7 +223,7 @@
                 questions: [
                     { text: "Where are you from?", video: "assets/meetthestaffvids/chantelle_q1.mp4" },
                     { text: "What's your favourite place in Japan?", video: "assets/meetthestaffvids/chantelle_q2.mp4" },
-                    { text: "What are you afraid of?", video: "assets/meetthestaffvids/chantelle_q3.mp4" }
+                    { text: "What are your afraid of?", video: "assets/meetthestaffvids/chantelle_q3.mp4" }
                 ]
             },
             {
@@ -200,7 +234,7 @@
                 introVideo: "assets/meetthestaffvids/kanon_intro.mp4",
                 questions: [
                     { text: "Where are you from?", video: "assets/meetthestaffvids/kanon_q1.mp4" },
-                    { text: "What are you afraid of?", video: "assets/meetthestaffvids/kanon_q2.mp4" },
+                    { text: "What are your afraid of?", video: "assets/meetthestaffvids/kanon_q2.mp4" },
                     { text: "Have you studied abroad?", video: "assets/meetthestaffvids/kanon_q3.mp4" }
                 ]
             },
@@ -264,32 +298,8 @@
                     { text: "What do you recommend at British Hills?", video: "assets/meetthestaffvids/victoria_q3.mp4" }
                 ]
             },
-            {
-                id: "ben",
-                name: "Ben",
-                role: "Teacher",
-                image: "assets/meetthestaffvids/ben.jpg",
-                introVideo: "assets/meetthestaffvids/ben_intro.mp4",
-                questions: [
-                    { text: "Where are you from?", video: "assets/meetthestaffvids/ben_q1.mp4" },
-                    { text: "What's your favourite TV show?", video: "assets/meetthestaffvids/ben_q2.mp4" },
-                    { text: "What are your hobbies?", video: "assets/meetthestaffvids/ben_q3.mp4" }
-                ]
-            },
-
-            // --- STAFF PENDING VIDEOS ---
-            {
-                id: "marcus",
-                name: "Marcus",
-                role: "Teacher",
-                image: "assets/meetthestaffvids/marcus.jpg", 
-                introVideo: "assets/meetthestaffvids/marcus_intro.mp4",
-                questions: [
-                    { text: "Where are you from?", video: "assets/meetthestaffvids/marcus_q1.mp4" },
-                    { text: "What is your favourite place in Japan?", video: "assets/meetthestaffvids/marcus_q2.mp4" },
-                    { text: "What's your favourite food?", video: "assets/meetthestaffvids/marcus_q3.mp4" }
-                ]
-            },
+            
+            // --- REMAINING STAFF ---
             {
                 id: "randy",
                 name: "Randy",
@@ -410,16 +420,30 @@
                     { text: "What are your hobbies?", video: "assets/meetthestaffvids/shannon_q3.mp4" }
                 ]
             },
+            
+            // --- HOSPITALITY STAFF (BOTTOM) ---
             {
-                id: "donovan",
-                name: "Donovan",
-                role: "Teacher",
-                image: "assets/meetthestaffvids/donovan.jpg",
-                introVideo: "assets/meetthestaffvids/donovan_intro.mp4",
+                id: "nathan",
+                name: "Nathan",
+                role: "Hospitality",
+                image: "assets/meetthestaffvids/nathan.jpg",
+                introVideo: "assets/meetthestaffvids/nathan_intro.mp4",
                 questions: [
-                    { text: "Where are you from?", video: "assets/meetthestaffvids/donovan_q1.mp4" },
-                    { text: "What is your favourite place in Japan?", video: "assets/meetthestaffvids/donovan_q2.mp4" },
-                    { text: "What are your hobbies?", video: "assets/meetthestaffvids/donovan_q3.mp4" }
+                    { text: "Where are you from?", video: "assets/meetthestaffvids/nathan_q1.mp4" },
+                    { text: "What do you recommend at British Hills?", video: "assets/meetthestaffvids/nathan_q2.mp4" },
+                    { text: "What are your hobbies?", video: "assets/meetthestaffvids/nathan_q3.mp4" }
+                ]
+            },
+            {
+                id: "james",
+                name: "James",
+                role: "Hospitality",
+                image: "assets/meetthestaffvids/james.jpg",
+                introVideo: "assets/meetthestaffvids/james_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/meetthestaffvids/james_q1.mp4" },
+                    { text: "What's your favourite food?", video: "assets/meetthestaffvids/james_q2.mp4" },
+                    { text: "What do you recommend at British Hills?", video: "assets/meetthestaffvids/james_q3.mp4" }
                 ]
             }
         ];
@@ -431,14 +455,20 @@
         const staffGrid = document.getElementById('staff-grid');
         const chatView = document.getElementById('chat-view');
         const mainVideo = document.getElementById('main-video');
-        // Removed debug element references
 
         // Initialize Gallery
         function initGallery() {
             staffGrid.innerHTML = '';
             staffData.forEach(staff => {
+                // Determine background color based on role
+                let roleBgClass = 'bg-white'; // Default fallback
+                if (staff.role === 'Teacher') roleBgClass = 'bg-yellow-50';
+                if (staff.role === 'Attendant') roleBgClass = 'bg-rose-50';
+                if (staff.role === 'Hospitality') roleBgClass = 'bg-blue-50';
+
                 const card = document.createElement('div');
-                card.className = "bg-white rounded-lg shadow-paper overflow-hidden card-lift border-2 border-transparent hover:border-gold cursor-pointer flex flex-col";
+                // Applied roleBgClass instead of fixed bg-white
+                card.className = `${roleBgClass} rounded-lg shadow-paper overflow-hidden card-lift border-2 border-transparent hover:border-gold cursor-pointer flex flex-col`;
                 card.onclick = () => openChat(staff.id);
 
                 // Reverted to simple IMG tag for reliability on mobile
@@ -547,8 +577,6 @@
                 });
             }
         }
-
-        // Removed mainVideo.onerror and mainVideo.onplaying as they were for the debug overlay
 
         // ==========================================
         // 4. RUN
