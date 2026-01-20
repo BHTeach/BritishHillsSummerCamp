@@ -332,10 +332,18 @@
                 card.className = "bg-white rounded-lg shadow-paper overflow-hidden card-lift border-2 border-transparent hover:border-gold cursor-pointer flex flex-col";
                 card.onclick = () => openChat(staff.id);
 
+                // REPLACED: <img> tag with <video> tag to use first frame as thumbnail
+                // We use bg-hunter-dark as a background while the video metadata loads
                 card.innerHTML = `
-                    <div class="h-64 w-full bg-gray-200 overflow-hidden relative">
-                         <!-- Placeholder for staff image -->
-                        <img src="${staff.image}" alt="${staff.name}" class="w-full h-full object-cover">
+                    <div class="h-64 w-full bg-hunter-dark overflow-hidden relative">
+                        <video 
+                            src="${staff.introVideo}" 
+                            class="w-full h-full object-cover pointer-events-none" 
+                            muted 
+                            playsinline 
+                            preload="metadata" 
+                            onloadeddata="this.currentTime=0.01">
+                        </video>
                         <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/60 to-transparent p-4">
                         </div>
                     </div>
