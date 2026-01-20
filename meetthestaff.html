@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meet the Staff | British Hills Summer Camp</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Cinzel:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#fdfbf7',
+                        hunter: '#234f32',
+                        'hunter-dark': '#1a3b25',
+                        gold: '#c5a009',
+                    },
+                    fontFamily: {
+                        header: ['Cinzel', 'serif'],
+                        body: ['Patrick Hand', 'cursive'],
+                        accent: ['Architects Daughter', 'cursive'],
+                    },
+                    boxShadow: {
+                        'paper': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles for aesthetics */
+        body {
+            background-color: #fdfbf7;
+            background-image: radial-gradient(#c5a009 0.5px, transparent 0.5px);
+            background-size: 20px 20px;
+            /* Subtle texture effect to mimic paper */
+        }
+        
+        .card-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Scrollbar styling for the question list */
+        .custom-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #fdfbf7; 
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #c5a009; 
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="text-hunter font-body min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-hunter text-cream py-6 border-b-4 border-gold shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-5xl font-header font-bold tracking-wider">Meet the Team</h1>
+            <p class="font-accent text-lg md:text-xl text-gold mt-2">Get to know the British Hills Staff!</p>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow container mx-auto px-4 py-8 relative">
+
+        <!-- VIEW 1: STAFF GALLERY -->
+        <div id="gallery-view" class="transition-opacity duration-500 ease-in-out">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="staff-grid">
+                <!-- Staff cards will be injected here via JS -->
+            </div>
+        </div>
+
+        <!-- VIEW 2: VIDEO CHAT INTERFACE -->
+        <div id="chat-view" class="hidden fixed inset-0 bg-hunter/90 z-50 flex items-center justify-center p-4">
+            
+            <div class="bg-cream rounded-xl shadow-2xl w-full max-w-5xl h-[90vh] md:h-[80vh] flex flex-col md:flex-row overflow-hidden border-4 border-gold relative">
+                
+                <!-- Close / Back Button -->
+                <button onclick="closeChat()" class="absolute top-4 left-4 z-20 bg-white/80 hover:bg-white text-hunter px-4 py-2 rounded-full font-header font-bold shadow-md flex items-center gap-2 transition-colors">
+                    <span>&larr;</span> Back to List
+                </button>
+
+                <!-- Left Column: Video Player -->
+                <div class="w-full md:w-2/3 bg-black relative flex items-center justify-center group">
+                    
+                    <!-- The Actual Video Element -->
+                    <video id="main-video" class="w-full h-full object-cover" controls playsinline poster="https://placehold.co/1920x1080/234f32/c5a009?text=Video+Loading...">
+                        <source src="" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+
+                    <!-- DEBUG OVERLAY: Helps you see what file *should* be playing since you don't have files yet. 
+                         REMOVE THIS DIV when you have real videos. -->
+                    <div id="debug-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-black/60 text-white pointer-events-none p-8 text-center">
+                        <p class="font-header text-2xl text-gold mb-2">Video Placeholder</p>
+                        <p class="font-body text-xl">Attempting to play:</p>
+                        <code id="debug-filename" class="bg-gray-800 px-2 py-1 rounded mt-2 font-mono text-sm text-green-400">filename.mp4</code>
+                        <p class="text-sm mt-4 italic text-gray-300">(Once you upload real .mp4 files to your repo, this overlay will be replaced by the video)</p>
+                    </div>
+
+                    <!-- "Self View" (Simulates user's webcam) -->
+                    <div class="absolute bottom-4 right-4 w-24 h-32 md:w-32 md:h-48 bg-gray-800 border-2 border-white shadow-lg rounded-lg overflow-hidden flex items-center justify-center">
+                        <span class="text-white font-accent text-xs">Student Camera</span>
+                    </div>
+                </div>
+
+                <!-- Right Column: Interaction Panel -->
+                <div class="w-full md:w-1/3 flex flex-col bg-cream border-l-0 md:border-l-4 border-gold">
+                    
+                    <!-- Staff Header -->
+                    <div class="p-6 border-b-2 border-hunter/20 bg-white">
+                        <h2 id="chat-staff-name" class="text-4xl font-header font-bold text-hunter">Staff Name</h2>
+                        <p id="chat-staff-role" class="text-xl font-accent text-gold-dark mt-1">Role</p>
+                    </div>
+
+                    <!-- Conversation Zone -->
+                    <div class="flex-grow p-6 flex flex-col gap-4 overflow-y-auto custom-scroll bg-cream">
+                        <p class="font-body text-lg text-hunter/80 mb-2">Ask a question:</p>
+                        
+                        <div id="question-buttons" class="flex flex-col gap-3">
+                            <!-- Buttons injected via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Footer Area -->
+                    <div class="p-4 bg-hunter/10 text-center text-sm font-accent text-hunter">
+                        British Hills Summer Camp
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-hunter text-cream py-8 mt-8 border-t-4 border-gold">
+        <div class="container mx-auto px-4 text-center font-header">
+            <p>&copy; 2024 British Hills. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // ==========================================
+        // 1. DATA CONFIGURATION
+        // ==========================================
+        // Edit this array to add/remove staff or change questions.
+        // Filenames are automatically assumed based on name + action, but can be overridden.
+        
+        const staffData = [
+            {
+                id: "marcus",
+                name: "Marcus",
+                role: "Teacher",
+                image: "https://ui-avatars.com/api/?name=Marcus&background=234f32&color=fff&size=400", // Replace with real photo path later e.g. 'assets/images/marcus.jpg'
+                introVideo: "assets/videos/marcus_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/videos/marcus_q1.mp4" },
+                    { text: "What do you recommend at British Hills?", video: "assets/videos/marcus_q2.mp4" },
+                    { text: "What's your favourite food?", video: "assets/videos/marcus_q3.mp4" }
+                ]
+            },
+            {
+                id: "randy",
+                name: "Randy",
+                role: "Teacher",
+                image: "https://ui-avatars.com/api/?name=Randy&background=234f32&color=fff&size=400",
+                introVideo: "assets/videos/randy_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/videos/randy_q1.mp4" },
+                    { text: "What do you recommend at British Hills?", video: "assets/videos/randy_q2.mp4" },
+                    { text: "What are your hobbies?", video: "assets/videos/randy_q3.mp4" }
+                ]
+            },
+            {
+                id: "felicity",
+                name: "Felicity",
+                role: "Attendant",
+                image: "https://ui-avatars.com/api/?name=Felicity&background=c5a009&color=fff&size=400",
+                introVideo: "assets/videos/felicity_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/videos/felicity_q1.mp4" },
+                    { text: "What do you recommend at British Hills?", video: "assets/videos/felicity_q2.mp4" },
+                    { text: "Who should I tell if I have allergies?", video: "assets/videos/felicity_q3.mp4" }
+                ]
+            },
+            {
+                id: "yuko",
+                name: "Yuko",
+                role: "Attendant",
+                image: "https://ui-avatars.com/api/?name=Yuko&background=c5a009&color=fff&size=400",
+                introVideo: "assets/videos/yuko_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/videos/yuko_q1.mp4" },
+                    { text: "What do you recommend at British Hills?", video: "assets/videos/yuko_q2.mp4" },
+                    { text: "Do you enjoy speaking English?", video: "assets/videos/yuko_q3.mp4" }
+                ]
+            },
+            {
+                id: "mizuki",
+                name: "Mizuki",
+                role: "Attendant",
+                image: "https://ui-avatars.com/api/?name=Mizuki&background=c5a009&color=fff&size=400",
+                introVideo: "assets/videos/mizuki_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/videos/mizuki_q1.mp4" },
+                    { text: "What is your favorite season here?", video: "assets/videos/mizuki_q2.mp4" },
+                    { text: "Do you like Harry Potter?", video: "assets/videos/mizuki_q3.mp4" }
+                ]
+            },
+            {
+                id: "megumi",
+                name: "Megumi",
+                role: "Attendant",
+                image: "https://ui-avatars.com/api/?name=Megumi&background=c5a009&color=fff&size=400",
+                introVideo: "assets/videos/megumi_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/videos/megumi_q1.mp4" },
+                    { text: "What's the best souvenir to buy?", video: "assets/videos/megumi_q2.mp4" },
+                    { text: "What is your favorite sweet?", video: "assets/videos/megumi_q3.mp4" }
+                ]
+            },
+            {
+                id: "moja",
+                name: "Moja",
+                role: "Teacher",
+                image: "https://ui-avatars.com/api/?name=Moja&background=234f32&color=fff&size=400",
+                introVideo: "assets/videos/moja_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/videos/moja_q1.mp4" },
+                    { text: "Do you like living in Japan?", video: "assets/videos/moja_q2.mp4" },
+                    { text: "How many languages do you speak?", video: "assets/videos/moja_q3.mp4" }
+                ]
+            },
+            {
+                id: "emma",
+                name: "Emma",
+                role: "Teacher",
+                image: "https://ui-avatars.com/api/?name=Emma&background=234f32&color=fff&size=400",
+                introVideo: "assets/videos/emma_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/videos/emma_q1.mp4" },
+                    { text: "What's your favourite subject?", video: "assets/videos/emma_q2.mp4" },
+                    { text: "What's your favourite lesson at British Hills?", video: "assets/videos/emma_q3.mp4" }
+                ]
+            },
+            {
+                id: "matt",
+                name: "Matt",
+                role: "Teacher",
+                image: "https://ui-avatars.com/api/?name=Matt&background=234f32&color=fff&size=400",
+                introVideo: "assets/videos/matt_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/videos/matt_q1.mp4" },
+                    { text: "What's your favourite TV show?", video: "assets/videos/matt_q2.mp4" },
+                    { text: "What's your favourite lesson at British Hills?", video: "assets/videos/matt_q3.mp4" }
+                ]
+            },
+            {
+                id: "graham",
+                name: "Graham",
+                role: "Teacher",
+                image: "https://ui-avatars.com/api/?name=Graham&background=234f32&color=fff&size=400",
+                introVideo: "assets/videos/graham_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/videos/graham_q1.mp4" },
+                    { text: "What's your favourite lesson at British Hills?", video: "assets/videos/graham_q2.mp4" },
+                    { text: "What's your favourite football team?", video: "assets/videos/graham_q3.mp4" }
+                ]
+            },
+            {
+                id: "shannon",
+                name: "Shannon",
+                role: "Teacher",
+                image: "https://ui-avatars.com/api/?name=Shannon&background=234f32&color=fff&size=400",
+                introVideo: "assets/videos/shannon_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/videos/shannon_q1.mp4" },
+                    { text: "What do you recommend at British Hills?", video: "assets/videos/shannon_q2.mp4" },
+                    { text: "What are your hobbies?", video: "assets/videos/shannon_q3.mp4" }
+                ]
+            }
+        ];
+
+        // ==========================================
+        // 2. DOM ELEMENTS & INITIALIZATION
+        // ==========================================
+        const galleryView = document.getElementById('gallery-view');
+        const staffGrid = document.getElementById('staff-grid');
+        const chatView = document.getElementById('chat-view');
+        const mainVideo = document.getElementById('main-video');
+        const debugFilename = document.getElementById('debug-filename');
+        const debugOverlay = document.getElementById('debug-overlay');
+
+        // Initialize Gallery
+        function initGallery() {
+            staffGrid.innerHTML = '';
+            staffData.forEach(staff => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-lg shadow-paper overflow-hidden card-lift border-2 border-transparent hover:border-gold cursor-pointer flex flex-col";
+                card.onclick = () => openChat(staff.id);
+
+                card.innerHTML = `
+                    <div class="h-64 w-full bg-gray-200 overflow-hidden relative">
+                         <!-- Placeholder for staff image -->
+                        <img src="${staff.image}" alt="${staff.name}" class="w-full h-full object-cover">
+                        <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/60 to-transparent p-4">
+                             <!-- Optional overlay content -->
+                        </div>
+                    </div>
+                    <div class="p-4 text-center">
+                        <h3 class="text-2xl font-header font-bold text-hunter">${staff.name}</h3>
+                        <p class="text-gold-dark font-accent text-lg">${staff.role}</p>
+                        <button class="mt-4 bg-hunter text-cream px-4 py-2 rounded-full font-body text-lg w-full hover:bg-hunter-dark transition-colors">
+                            Chat with ${staff.name}
+                        </button>
+                    </div>
+                `;
+                staffGrid.appendChild(card);
+            });
+        }
+
+        // ==========================================
+        // 3. CHAT LOGIC
+        // ==========================================
+        
+        function openChat(staffId) {
+            const staff = staffData.find(s => s.id === staffId);
+            if (!staff) return;
+
+            // Update UI with Staff Details
+            document.getElementById('chat-staff-name').textContent = staff.name;
+            document.getElementById('chat-staff-role').textContent = staff.role;
+
+            // Generate Question Buttons
+            const questionContainer = document.getElementById('question-buttons');
+            questionContainer.innerHTML = ''; // Clear old buttons
+
+            // Play Intro Video by default
+            playVideo(staff.introVideo);
+
+            // Create buttons
+            staff.questions.forEach((q, index) => {
+                const btn = document.createElement('button');
+                btn.className = "text-left bg-white border-2 border-hunter/20 p-4 rounded-lg shadow-sm hover:border-gold hover:shadow-md hover:bg-cream transition-all group";
+                btn.innerHTML = `
+                    <span class="block font-header font-bold text-hunter text-sm mb-1 group-hover:text-gold-dark">Question ${index + 1}</span>
+                    <span class="font-body text-xl leading-tight">${q.text}</span>
+                `;
+                btn.onclick = () => {
+                    // Reset styling on all buttons
+                    Array.from(questionContainer.children).forEach(b => {
+                        b.classList.remove('border-gold', 'bg-cream');
+                        b.classList.add('border-hunter/20', 'bg-white');
+                    });
+                    // Highlight active button
+                    btn.classList.remove('border-hunter/20', 'bg-white');
+                    btn.classList.add('border-gold', 'bg-cream');
+                    
+                    playVideo(q.video);
+                };
+                questionContainer.appendChild(btn);
+            });
+
+            // Show Chat View
+            galleryView.classList.add('opacity-0'); // Fade out gallery
+            setTimeout(() => {
+                galleryView.classList.add('hidden');
+                chatView.classList.remove('hidden');
+            }, 300); // Wait for transition
+        }
+
+        function closeChat() {
+            // Stop video
+            mainVideo.pause();
+            mainVideo.currentTime = 0;
+            mainVideo.src = "";
+
+            // Hide Chat, Show Gallery
+            chatView.classList.add('hidden');
+            galleryView.classList.remove('hidden');
+            setTimeout(() => {
+                galleryView.classList.remove('opacity-0');
+            }, 50);
+        }
+
+        function playVideo(src) {
+            // Update debug text (Remove this logic when you have real files)
+            debugFilename.textContent = src;
+            debugOverlay.style.display = 'flex'; // Show overlay
+            
+            // Standard Video Logic
+            mainVideo.src = src;
+            mainVideo.load();
+            
+            // Try to play
+            const playPromise = mainVideo.play();
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    // Playback started - Hide debug overlay if the file actually loads
+                    // Note: Since files don't exist yet, the onerror handler below handles the UI
+                })
+                .catch(error => {
+                    // Auto-play was prevented or file not found
+                    console.log("Video status: " + error);
+                });
+            }
+        }
+
+        // Handle File Not Found (Since we are in dev mode without the real mp4s)
+        mainVideo.onerror = function() {
+            debugOverlay.style.display = 'flex'; // Ensure overlay is visible if video fails
+        };
+        
+        // Hide overlay if video successfully plays
+        mainVideo.onplaying = function() {
+            debugOverlay.style.display = 'none';
+        }
+
+        // ==========================================
+        // 4. RUN
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', initGallery);
+
+    </script>
+</body>
+</html>
