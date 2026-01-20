@@ -71,7 +71,12 @@
 
     <!-- Header -->
     <header class="bg-hunter text-cream py-6 border-b-4 border-gold shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-4 text-center">
+        <div class="container mx-auto px-4 text-center relative">
+            <!-- Back to Home Button -->
+            <a href="index.html" class="absolute left-0 top-1/2 -translate-y-1/2 bg-cream text-hunter hover:bg-white px-4 py-2 rounded-full font-header font-bold shadow-md flex items-center gap-2 transition-all hover:scale-105 text-sm md:text-base">
+                <span>&larr;</span> <span class="hidden sm:inline">Home</span>
+            </a>
+
             <h1 class="text-3xl md:text-5xl font-header font-bold tracking-wider">Meet the Team</h1>
             <p class="font-accent text-lg md:text-xl text-gold mt-2">Give British Hills staff a call and have a chat!</p>
         </div>
