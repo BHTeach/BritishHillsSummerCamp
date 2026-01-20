@@ -71,9 +71,11 @@
 
     <!-- Header -->
     <header class="bg-hunter text-cream py-6 border-b-4 border-gold shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-4 text-center relative">
+        <!-- Added px-12 to container to ensure text doesn't flow under the absolute button on mobile -->
+        <div class="container mx-auto px-12 md:px-4 text-center relative">
             <!-- Back to Home Button -->
-            <a href="index.html" class="absolute left-0 top-1/2 -translate-y-1/2 bg-cream text-hunter hover:bg-white px-4 py-2 rounded-full font-header font-bold shadow-md flex items-center gap-2 transition-all hover:scale-105 text-sm md:text-base">
+            <!-- Updated: bg-cream/70 for transparency, backdrop-blur-sm, and adjusted positioning -->
+            <a href="index.html" class="absolute left-2 md:left-0 top-1/2 -translate-y-1/2 bg-cream/70 backdrop-blur-sm text-hunter hover:bg-white px-3 py-2 md:px-4 md:py-2 rounded-full font-header font-bold shadow-md flex items-center gap-2 transition-all hover:scale-105 text-sm md:text-base border border-transparent hover:border-gold z-50">
                 <span>&larr;</span> <span class="hidden sm:inline">Home</span>
             </a>
 
