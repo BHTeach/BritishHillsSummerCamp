@@ -102,13 +102,11 @@
                 <div class="w-full md:w-2/3 h-[35vh] md:h-auto bg-hunter-dark relative flex items-center justify-center group shrink-0">
                     
                     <!-- The Actual Video Element -->
-                    <!-- Removed poster attribute to prevent flashing. Background color handles the "no video" state. -->
-                    <video id="main-video" class="w-full h-full object-contain md:object-cover" controls playsinline>
+                    <!-- Added controlsList="nodownload" and oncontextmenu="return false;" to disable download options -->
+                    <video id="main-video" class="w-full h-full object-contain md:object-cover" controls playsinline controlsList="nodownload" oncontextmenu="return false;">
                         <source src="" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
-
-                    <!-- Debug overlay removed as requested -->
 
                 </div>
 
@@ -204,6 +202,78 @@
                     { text: "Where are you from?", video: "assets/meetthestaffvids/kanon_q1.mp4" },
                     { text: "What are you afraid of?", video: "assets/meetthestaffvids/kanon_q2.mp4" },
                     { text: "Have you studied abroad?", video: "assets/meetthestaffvids/kanon_q3.mp4" }
+                ]
+            },
+            {
+                id: "shavaughn",
+                name: "Shavaughn",
+                role: "Teacher",
+                image: "assets/images/shavaughn.jpg",
+                introVideo: "assets/meetthestaffvids/shavaughn_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/meetthestaffvids/shavaughn_q1.mp4" },
+                    { text: "Why did you come to Japan?", video: "assets/meetthestaffvids/shavaughn_q2.mp4" },
+                    { text: "What music do you like?", video: "assets/meetthestaffvids/shavaughn_q3.mp4" }
+                ]
+            },
+            {
+                id: "kimberley",
+                name: "Kimberley",
+                role: "Teacher",
+                image: "assets/images/kimberley.jpg",
+                introVideo: "assets/meetthestaffvids/kimberley_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/meetthestaffvids/kimberley_q1.mp4" },
+                    { text: "Why did you come to Japan?", video: "assets/meetthestaffvids/kimberley_q2.mp4" },
+                    { text: "What is your favourite place in Japan?", video: "assets/meetthestaffvids/kimberley_q3.mp4" }
+                ]
+            },
+            {
+                id: "tom",
+                name: "Tom",
+                role: "Teacher",
+                image: "assets/images/tom.jpg",
+                introVideo: "assets/meetthestaffvids/tom_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/meetthestaffvids/tom_q1.mp4" },
+                    { text: "What's your favourite food?", video: "assets/meetthestaffvids/tom_q2.mp4" },
+                    { text: "What do you recommend at British Hills?", video: "assets/meetthestaffvids/tom_q3.mp4" }
+                ]
+            },
+            {
+                id: "zain",
+                name: "Zain",
+                role: "Teacher",
+                image: "assets/images/zain.jpg",
+                introVideo: "assets/meetthestaffvids/zain_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/meetthestaffvids/zain_q1.mp4" },
+                    { text: "What are your hobbies?", video: "assets/meetthestaffvids/zain_q2.mp4" },
+                    { text: "What's your favourite lesson at British Hills?", video: "assets/meetthestaffvids/zain_q3.mp4" }
+                ]
+            },
+            {
+                id: "victoria",
+                name: "Victoria",
+                role: "Teacher",
+                image: "assets/images/victoria.jpg",
+                introVideo: "assets/meetthestaffvids/victoria_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/meetthestaffvids/victoria_q1.mp4" },
+                    { text: "What is your favourite season?", video: "assets/meetthestaffvids/victoria_q2.mp4" },
+                    { text: "What do you recommend at British Hills?", video: "assets/meetthestaffvids/victoria_q3.mp4" }
+                ]
+            },
+            {
+                id: "ben",
+                name: "Ben",
+                role: "Teacher",
+                image: "assets/images/ben.jpg",
+                introVideo: "assets/meetthestaffvids/ben_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/meetthestaffvids/ben_q1.mp4" },
+                    { text: "What's your favourite TV show?", video: "assets/meetthestaffvids/ben_q2.mp4" },
+                    { text: "What are your hobbies?", video: "assets/meetthestaffvids/ben_q3.mp4" }
                 ]
             },
 
