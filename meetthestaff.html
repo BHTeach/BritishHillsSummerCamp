@@ -331,6 +331,8 @@
                 role: "Attendant",
                 image: "https://ui-avatars.com/api/?name=Takako&background=c5a009&color=fff&size=400",
                 introVideo: "assets/meetthestaffvids/takako_intro.mp4",
+                thumbnailVideo: "assets/meetthestaffvids/takako_q3.mp4", 
+                thumbnailTime: 10,
                 questions: [
                     { text: "Where are you from?", video: "assets/meetthestaffvids/takako_q1.mp4" },
                     { text: "How did you learn English?", video: "assets/meetthestaffvids/takako_q2.mp4" },
@@ -368,17 +370,22 @@
                 card.className = "bg-white rounded-lg shadow-paper overflow-hidden card-lift border-2 border-transparent hover:border-gold cursor-pointer flex flex-col";
                 card.onclick = () => openChat(staff.id);
 
+                // Determine video source and seek time for thumbnail
+                // Fallback to introVideo and 0.01s if no specific thumbnail settings exist
+                const thumbSrc = staff.thumbnailVideo || staff.introVideo;
+                const thumbTime = staff.thumbnailTime || 0.01;
+
                 // REPLACED: <img> tag with <video> tag to use first frame as thumbnail
                 // We use bg-hunter-dark as a background while the video metadata loads
                 card.innerHTML = `
                     <div class="h-64 w-full bg-hunter-dark overflow-hidden relative">
                         <video 
-                            src="${staff.introVideo}" 
+                            src="${thumbSrc}" 
                             class="w-full h-full object-cover pointer-events-none" 
                             muted 
                             playsinline 
                             preload="metadata" 
-                            onloadeddata="this.currentTime=0.01">
+                            onloadeddata="this.currentTime=${thumbTime}">
                         </video>
                         <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/60 to-transparent p-4">
                         </div>
