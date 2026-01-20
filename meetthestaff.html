@@ -157,6 +157,60 @@
         // Filenames are automatically assumed based on name + action, but can be overridden.
         
         const staffData = [
+            // --- STAFF WITH VIDEO CONTENT READY ---
+            {
+                id: "luke",
+                name: "Luke",
+                role: "Teacher",
+                image: "https://ui-avatars.com/api/?name=Luke&background=234f32&color=fff&size=400",
+                introVideo: "assets/meetthestaffvids/luke_intro.mp4",
+                thumbnailTime: 3,
+                questions: [
+                    { text: "Where are you from?", video: "assets/meetthestaffvids/luke_q1.mp4" },
+                    { text: "What is your favourite British Hills Lesson?", video: "assets/meetthestaffvids/luke_q2.mp4" },
+                    { text: "What season do you like?", video: "assets/meetthestaffvids/luke_q3.mp4" }
+                ]
+            },
+            {
+                id: "takako",
+                name: "Takako",
+                role: "Attendant",
+                image: "https://ui-avatars.com/api/?name=Takako&background=c5a009&color=fff&size=400",
+                introVideo: "assets/meetthestaffvids/takako_intro.mp4",
+                thumbnailVideo: "assets/meetthestaffvids/takako_q3.mp4", 
+                thumbnailTime: 10,
+                questions: [
+                    { text: "Where are you from?", video: "assets/meetthestaffvids/takako_q1.mp4" },
+                    { text: "How did you learn English?", video: "assets/meetthestaffvids/takako_q2.mp4" },
+                    { text: "What is your favourite season?", video: "assets/meetthestaffvids/takako_q3.mp4" }
+                ]
+            },
+            {
+                id: "chantelle",
+                name: "Chantelle",
+                role: "Teacher",
+                image: "https://ui-avatars.com/api/?name=Chantelle&background=234f32&color=fff&size=400",
+                introVideo: "assets/meetthestaffvids/chantelle_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/meetthestaffvids/chantelle_q1.mp4" },
+                    { text: "What's your favourite place in Japan?", video: "assets/meetthestaffvids/chantelle_q2.mp4" },
+                    { text: "What are you afraid of?", video: "assets/meetthestaffvids/chantelle_q3.mp4" }
+                ]
+            },
+            {
+                id: "kanon",
+                name: "Kanon",
+                role: "Attendant",
+                image: "https://ui-avatars.com/api/?name=Kanon&background=c5a009&color=fff&size=400",
+                introVideo: "assets/meetthestaffvids/kanon_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/meetthestaffvids/kanon_q1.mp4" },
+                    { text: "What are you afraid of?", video: "assets/meetthestaffvids/kanon_q2.mp4" },
+                    { text: "Have you studied abroad?", video: "assets/meetthestaffvids/kanon_q3.mp4" }
+                ]
+            },
+
+            // --- STAFF PENDING VIDEOS ---
             {
                 id: "marcus",
                 name: "Marcus",
@@ -299,57 +353,6 @@
                     { text: "Where are you from?", video: "assets/meetthestaffvids/donovan_q1.mp4" },
                     { text: "What is your favourite place in Japan?", video: "assets/meetthestaffvids/donovan_q2.mp4" },
                     { text: "What are your hobbies?", video: "assets/meetthestaffvids/donovan_q3.mp4" }
-                ]
-            },
-            {
-                id: "luke",
-                name: "Luke",
-                role: "Teacher",
-                image: "https://ui-avatars.com/api/?name=Luke&background=234f32&color=fff&size=400",
-                introVideo: "assets/meetthestaffvids/luke_intro.mp4",
-                thumbnailTime: 3,
-                questions: [
-                    { text: "Where are you from?", video: "assets/meetthestaffvids/luke_q1.mp4" },
-                    { text: "What is your favourite British Hills Lesson?", video: "assets/meetthestaffvids/luke_q2.mp4" },
-                    { text: "What season do you like?", video: "assets/meetthestaffvids/luke_q3.mp4" }
-                ]
-            },
-            {
-                id: "chantelle",
-                name: "Chantelle",
-                role: "Teacher",
-                image: "https://ui-avatars.com/api/?name=Chantelle&background=234f32&color=fff&size=400",
-                introVideo: "assets/meetthestaffvids/chantelle_intro.mp4",
-                questions: [
-                    { text: "Where are you from?", video: "assets/meetthestaffvids/chantelle_q1.mp4" },
-                    { text: "What's your favourite place in Japan?", video: "assets/meetthestaffvids/chantelle_q2.mp4" },
-                    { text: "What are you afraid of?", video: "assets/meetthestaffvids/chantelle_q3.mp4" }
-                ]
-            },
-            {
-                id: "takako",
-                name: "Takako",
-                role: "Attendant",
-                image: "https://ui-avatars.com/api/?name=Takako&background=c5a009&color=fff&size=400",
-                introVideo: "assets/meetthestaffvids/takako_intro.mp4",
-                thumbnailVideo: "assets/meetthestaffvids/takako_q3.mp4", 
-                thumbnailTime: 10,
-                questions: [
-                    { text: "Where are you from?", video: "assets/meetthestaffvids/takako_q1.mp4" },
-                    { text: "How did you learn English?", video: "assets/meetthestaffvids/takako_q2.mp4" },
-                    { text: "What is your favourite season?", video: "assets/meetthestaffvids/takako_q3.mp4" }
-                ]
-            },
-            {
-                id: "kanon",
-                name: "Kanon",
-                role: "Attendant",
-                image: "https://ui-avatars.com/api/?name=Kanon&background=c5a009&color=fff&size=400",
-                introVideo: "assets/meetthestaffvids/kanon_intro.mp4",
-                questions: [
-                    { text: "Where are you from?", video: "assets/meetthestaffvids/kanon_q1.mp4" },
-                    { text: "What are you afraid of?", video: "assets/meetthestaffvids/kanon_q2.mp4" },
-                    { text: "Have you studied abroad?", video: "assets/meetthestaffvids/kanon_q3.mp4" }
                 ]
             }
         ];
