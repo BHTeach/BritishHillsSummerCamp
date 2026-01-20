@@ -155,6 +155,18 @@
         const staffData = [
             // --- TOP PRIORITY ---
             {
+                id: "james",
+                name: "James",
+                role: "Guest Services",
+                image: "assets/meetthestaffvids/james.jpg",
+                introVideo: "assets/meetthestaffvids/james_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/meetthestaffvids/james_q1.mp4" },
+                    { text: "What do you like about Japan?", video: "assets/meetthestaffvids/james_q2.mp4" },
+                    { text: "What should I do if I need help?", video: "assets/meetthestaffvids/james_q3.mp4" }
+                ]
+            },
+            {
                 id: "ben",
                 name: "Ben",
                 role: "Teacher",
@@ -167,6 +179,18 @@
                 ]
             },
             {
+                id: "takako",
+                name: "Takako",
+                role: "Attendant",
+                image: "assets/meetthestaffvids/takako.jpg",
+                introVideo: "assets/meetthestaffvids/takako_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/meetthestaffvids/takako_q1.mp4" },
+                    { text: "How did you learn English?", video: "assets/meetthestaffvids/takako_q2.mp4" },
+                    { text: "What is your favourite season?", video: "assets/meetthestaffvids/takako_q3.mp4" }
+                ]
+            },
+            {
                 id: "marcus",
                 name: "Marcus",
                 role: "Teacher",
@@ -176,6 +200,18 @@
                     { text: "Where are you from?", video: "assets/meetthestaffvids/marcus_q1.mp4" },
                     { text: "What is your favourite place in Japan?", video: "assets/meetthestaffvids/marcus_q2.mp4" },
                     { text: "What's your favourite food?", video: "assets/meetthestaffvids/marcus_q3.mp4" }
+                ]
+            },
+            {
+                id: "santi",
+                name: "Santi",
+                role: "Guest Services",
+                image: "assets/meetthestaffvids/santi.jpg",
+                introVideo: "assets/meetthestaffvids/santi_intro.mp4",
+                questions: [
+                    { text: "Where are you from?", video: "assets/meetthestaffvids/santi_q1.mp4" },
+                    { text: "What football team do you support?", video: "assets/meetthestaffvids/santi_q2.mp4" },
+                    { text: "What are your hobbies?", video: "assets/meetthestaffvids/santi_q3.mp4" }
                 ]
             },
             {
@@ -200,18 +236,6 @@
                     { text: "Where are you from?", video: "assets/meetthestaffvids/luke_q1.mp4" },
                     { text: "What is your favourite British Hills Lesson?", video: "assets/meetthestaffvids/luke_q2.mp4" },
                     { text: "What season do you like?", video: "assets/meetthestaffvids/luke_q3.mp4" }
-                ]
-            },
-            {
-                id: "takako",
-                name: "Takako",
-                role: "Attendant",
-                image: "assets/meetthestaffvids/takako.jpg",
-                introVideo: "assets/meetthestaffvids/takako_intro.mp4",
-                questions: [
-                    { text: "Where are you from?", video: "assets/meetthestaffvids/takako_q1.mp4" },
-                    { text: "How did you learn English?", video: "assets/meetthestaffvids/takako_q2.mp4" },
-                    { text: "What is your favourite season?", video: "assets/meetthestaffvids/takako_q3.mp4" }
                 ]
             },
             {
@@ -419,32 +443,6 @@
                     { text: "What do you recommend at British Hills?", video: "assets/meetthestaffvids/shannon_q2.mp4" },
                     { text: "What are your hobbies?", video: "assets/meetthestaffvids/shannon_q3.mp4" }
                 ]
-            },
-            
-            // --- HOSPITALITY STAFF (BOTTOM) ---
-            {
-                id: "nathan",
-                name: "Nathan",
-                role: "Hospitality",
-                image: "assets/meetthestaffvids/nathan.jpg",
-                introVideo: "assets/meetthestaffvids/nathan_intro.mp4",
-                questions: [
-                    { text: "Where are you from?", video: "assets/meetthestaffvids/nathan_q1.mp4" },
-                    { text: "What do you recommend at British Hills?", video: "assets/meetthestaffvids/nathan_q2.mp4" },
-                    { text: "What are your hobbies?", video: "assets/meetthestaffvids/nathan_q3.mp4" }
-                ]
-            },
-            {
-                id: "james",
-                name: "James",
-                role: "Hospitality",
-                image: "assets/meetthestaffvids/james.jpg",
-                introVideo: "assets/meetthestaffvids/james_intro.mp4",
-                questions: [
-                    { text: "Where are you from?", video: "assets/meetthestaffvids/james_q1.mp4" },
-                    { text: "What's your favourite food?", video: "assets/meetthestaffvids/james_q2.mp4" },
-                    { text: "What do you recommend at British Hills?", video: "assets/meetthestaffvids/james_q3.mp4" }
-                ]
             }
         ];
 
@@ -464,7 +462,7 @@
                 let roleBgClass = 'bg-white'; // Default fallback
                 if (staff.role === 'Teacher') roleBgClass = 'bg-yellow-50';
                 if (staff.role === 'Attendant') roleBgClass = 'bg-rose-50';
-                if (staff.role === 'Hospitality') roleBgClass = 'bg-blue-50';
+                if (staff.role === 'Guest Services') roleBgClass = 'bg-blue-50';
 
                 const card = document.createElement('div');
                 // Applied roleBgClass instead of fixed bg-white
