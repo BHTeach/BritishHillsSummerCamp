@@ -38,12 +38,10 @@
     </script>
 
     <style>
-        /* Custom Styles for aesthetics */
         body {
             background-color: #fdfbf7;
             background-image: radial-gradient(#c5a009 0.5px, transparent 0.5px);
             background-size: 20px 20px;
-            /* Subtle texture effect to mimic paper */
         }
         
         .card-lift {
@@ -54,7 +52,6 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
 
-        /* Scrollbar styling for the question list */
         .custom-scroll::-webkit-scrollbar {
             width: 8px;
         }
@@ -71,10 +68,7 @@
 
     <!-- Header -->
     <header class="bg-hunter text-cream py-6 border-b-4 border-gold shadow-lg sticky top-0 z-50">
-        <!-- Added px-12 to container to ensure text doesn't flow under the absolute button on mobile -->
         <div class="container mx-auto px-12 md:px-4 text-center relative">
-            <!-- Back to Home Button -->
-            <!-- Updated: bg-cream/70 for transparency, backdrop-blur-sm, and adjusted positioning -->
             <a href="index.html" class="absolute left-2 md:left-0 top-1/2 -translate-y-1/2 bg-cream/70 backdrop-blur-sm text-hunter hover:bg-white px-3 py-2 md:px-4 md:py-2 rounded-full font-header font-bold shadow-md flex items-center gap-2 transition-all hover:scale-105 text-sm md:text-base border border-transparent hover:border-gold z-50">
                 <span>&larr;</span> <span class="hidden sm:inline">Home</span>
             </a>
@@ -84,59 +78,37 @@
         </div>
     </header>
 
-    <!-- Main Content Area -->
     <main class="flex-grow container mx-auto px-4 py-8 relative">
 
-        <!-- VIEW 1: STAFF GALLERY -->
         <div id="gallery-view" class="transition-opacity duration-500 ease-in-out">
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="staff-grid">
-                <!-- Staff cards will be injected here via JS -->
             </div>
         </div>
 
-        <!-- VIEW 2: VIDEO CHAT INTERFACE -->
         <div id="chat-view" class="hidden fixed inset-0 bg-hunter/90 z-50 flex items-center justify-center p-4">
-            
             <div class="bg-cream rounded-xl shadow-2xl w-full max-w-5xl h-[90vh] md:h-[80vh] flex flex-col md:flex-row overflow-hidden border-4 border-gold relative">
-                
-                <!-- Close / Back Button -->
                 <button onclick="closeChat()" class="absolute top-4 left-4 z-20 bg-white/80 hover:bg-white text-hunter px-4 py-2 rounded-full font-header font-bold shadow-md flex items-center gap-2 transition-colors text-sm md:text-base">
                     <span>&larr;</span> Back
                 </button>
 
-                <!-- Left Column: Video Player -->
-                <!-- Mobile Fix: h-[35vh] restricts height on phone, md:h-auto lets it fill height on desktop -->
                 <div class="w-full md:w-2/3 h-[35vh] md:h-auto bg-hunter-dark relative flex items-center justify-center group shrink-0">
-                    
-                    <!-- The Actual Video Element -->
-                    <!-- Added controlsList="nodownload" and oncontextmenu="return false;" to disable download options -->
                     <video id="main-video" class="w-full h-full object-contain md:object-cover" controls playsinline controlsList="nodownload" oncontextmenu="return false;">
                         <source src="" type="video/mp4">
-                        Your browser does not support the video tag.
                     </video>
-
                 </div>
 
-                <!-- Right Column: Interaction Panel -->
-                <!-- Mobile Fix: flex-1 ensures it takes all remaining space -->
                 <div class="w-full md:w-1/3 flex-1 flex flex-col bg-cream border-l-0 md:border-l-4 border-gold min-h-0">
-                    
-                    <!-- Staff Header -->
                     <div class="p-4 md:p-6 border-b-2 border-hunter/20 bg-white shrink-0">
                         <h2 id="chat-staff-name" class="text-2xl md:text-4xl font-header font-bold text-hunter">Staff Name</h2>
                         <p id="chat-staff-role" class="text-lg md:text-xl font-accent text-gold-dark mt-1">Role</p>
                     </div>
 
-                    <!-- Conversation Zone -->
                     <div class="flex-grow p-4 md:p-6 flex flex-col gap-3 md:gap-4 overflow-y-auto custom-scroll bg-cream">
                         <p class="font-body text-base md:text-lg text-hunter/80 mb-1">Ask a question:</p>
-                        
                         <div id="question-buttons" class="flex flex-col gap-2 md:gap-3 pb-4">
-                            <!-- Buttons injected via JS -->
                         </div>
                     </div>
 
-                    <!-- Footer Area -->
                     <div class="p-3 md:p-4 bg-hunter/10 text-center text-xs md:text-sm font-accent text-hunter shrink-0">
                         British Hills Summer Camp
                     </div>
@@ -146,21 +118,14 @@
 
     </main>
 
-    <!-- Footer -->
     <footer class="bg-hunter text-cream py-8 mt-8 border-t-4 border-gold">
         <div class="container mx-auto px-4 text-center font-header">
             <p>&copy; 2024 British Hills. All Rights Reserved.</p>
         </div>
     </footer>
 
-    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // ==========================================
-        // 1. DATA CONFIGURATION
-        // ==========================================
-        
         const staffData = [
-            // --- TOP PRIORITY ---
             {
                 id: "james",
                 name: "James",
@@ -254,7 +219,7 @@
                 questions: [
                     { text: "Where are you from?", video: "assets/meetthestaffvids/chantelle_q1.mp4" },
                     { text: "What's your favourite place in Japan?", video: "assets/meetthestaffvids/chantelle_q2.mp4" },
-                    { text: "What are your afraid of?", video: "assets/meetthestaffvids/chantelle_q3.mp4" }
+                    { text: "What are you afraid of?", video: "assets/meetthestaffvids/chantelle_q3.mp4" }
                 ]
             },
             {
@@ -265,7 +230,7 @@
                 introVideo: "assets/meetthestaffvids/kanon_intro.mp4",
                 questions: [
                     { text: "Where are you from?", video: "assets/meetthestaffvids/kanon_q1.mp4" },
-                    { text: "What are your afraid of?", video: "assets/meetthestaffvids/kanon_q2.mp4" },
+                    { text: "What are you afraid of?", video: "assets/meetthestaffvids/kanon_q2.mp4" },
                     { text: "Have you studied abroad?", video: "assets/meetthestaffvids/kanon_q3.mp4" }
                 ]
             },
@@ -329,8 +294,6 @@
                     { text: "What do you recommend at British Hills?", video: "assets/meetthestaffvids/victoria_q3.mp4" }
                 ]
             },
-            
-            // --- REMAINING STAFF ---
             {
                 id: "randy",
                 name: "Randy",
@@ -376,7 +339,7 @@
                 questions: [
                     { text: "Where are you from?", video: "assets/meetthestaffvids/mizuki_q1.mp4" },
                     { text: "What is your favorite season here?", video: "assets/meetthestaffvids/mizuki_q2.mp4" },
-                    { text: "Do you like Harry Potter?", video: "assets/meetthestaffvids/mizuki_q3.mp4" }
+                    { text: "What is a fun lesson at British Hills?", video: "assets/meetthestaffvids/mizuki_q3.mp4" }
                 ]
             },
             {
@@ -453,31 +416,23 @@
             }
         ];
 
-        // ==========================================
-        // 2. DOM ELEMENTS & INITIALIZATION
-        // ==========================================
         const galleryView = document.getElementById('gallery-view');
         const staffGrid = document.getElementById('staff-grid');
         const chatView = document.getElementById('chat-view');
         const mainVideo = document.getElementById('main-video');
 
-        // Initialize Gallery
         function initGallery() {
             staffGrid.innerHTML = '';
             staffData.forEach(staff => {
-                // Determine background color based on role
-                let roleBgClass = 'bg-white'; // Default fallback
+                let roleBgClass = 'bg-white';
                 if (staff.role === 'Teacher') roleBgClass = 'bg-yellow-50';
                 if (staff.role === 'Attendant') roleBgClass = 'bg-rose-50';
                 if (staff.role === 'Guest Services') roleBgClass = 'bg-blue-50';
 
                 const card = document.createElement('div');
-                // Applied roleBgClass instead of fixed bg-white
                 card.className = `${roleBgClass} rounded-lg shadow-paper overflow-hidden card-lift border-2 border-transparent hover:border-gold cursor-pointer flex flex-col`;
                 card.onclick = () => openChat(staff.id);
 
-                // Reverted to simple IMG tag for reliability on mobile
-                // Includes onerror fallback to generated avatar if local JPG not found
                 card.innerHTML = `
                     <div class="h-64 w-full bg-hunter-dark overflow-hidden relative">
                          <img 
@@ -501,26 +456,18 @@
             });
         }
 
-        // ==========================================
-        // 3. CHAT LOGIC
-        // ==========================================
-        
         function openChat(staffId) {
             const staff = staffData.find(s => s.id === staffId);
             if (!staff) return;
 
-            // Update UI with Staff Details
             document.getElementById('chat-staff-name').textContent = staff.name;
             document.getElementById('chat-staff-role').textContent = staff.role;
 
-            // Generate Question Buttons
             const questionContainer = document.getElementById('question-buttons');
-            questionContainer.innerHTML = ''; // Clear old buttons
+            questionContainer.innerHTML = '';
 
-            // Play Intro Video by default
             playVideo(staff.introVideo);
 
-            // Create buttons
             staff.questions.forEach((q, index) => {
                 const btn = document.createElement('button');
                 btn.className = "text-left bg-white border-2 border-hunter/20 p-3 md:p-4 rounded-lg shadow-sm hover:border-gold hover:shadow-md hover:bg-cream transition-all group w-full";
@@ -529,12 +476,10 @@
                     <span class="font-body text-lg md:text-xl leading-tight">${q.text}</span>
                 `;
                 btn.onclick = () => {
-                    // Reset styling on all buttons
                     Array.from(questionContainer.children).forEach(b => {
                         b.classList.remove('border-gold', 'bg-cream');
                         b.classList.add('border-hunter/20', 'bg-white');
                     });
-                    // Highlight active button
                     btn.classList.remove('border-hunter/20', 'bg-white');
                     btn.classList.add('border-gold', 'bg-cream');
                     
@@ -543,21 +488,18 @@
                 questionContainer.appendChild(btn);
             });
 
-            // Show Chat View
-            galleryView.classList.add('opacity-0'); // Fade out gallery
+            galleryView.classList.add('opacity-0');
             setTimeout(() => {
                 galleryView.classList.add('hidden');
                 chatView.classList.remove('hidden');
-            }, 300); // Wait for transition
+            }, 300);
         }
 
         function closeChat() {
-            // Stop video
             mainVideo.pause();
             mainVideo.currentTime = 0;
             mainVideo.src = "";
 
-            // Hide Chat, Show Gallery
             chatView.classList.add('hidden');
             galleryView.classList.remove('hidden');
             setTimeout(() => {
@@ -566,28 +508,17 @@
         }
 
         function playVideo(src) {
-            // Simplified Video Logic (No debug overlay)
             mainVideo.src = src;
             mainVideo.load();
-            
-            // Try to play
             const playPromise = mainVideo.play();
             if (playPromise !== undefined) {
-                playPromise.then(_ => {
-                    // Playback started
-                })
-                .catch(error => {
-                    // Auto-play was prevented or file not found
+                playPromise.then(_ => {}).catch(error => {
                     console.log("Video status: " + error);
                 });
             }
         }
 
-        // ==========================================
-        // 4. RUN
-        // ==========================================
         window.addEventListener('DOMContentLoaded', initGallery);
-
     </script>
 </body>
 </html>
