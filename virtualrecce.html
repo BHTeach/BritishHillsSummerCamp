@@ -15,7 +15,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Cinzel:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Cinzel:wght@400;700&family=Patrick+Hand&family=Libre+Barcode+39+Text&display=swap" rel="stylesheet">
     
     <style>
         body {
@@ -26,6 +26,7 @@
         .font-cinzel { font-family: 'Cinzel', serif; }
         .font-hand { font-family: 'Patrick Hand', cursive; }
         .font-marker { font-family: 'Architects Daughter', cursive; }
+        .font-barcode { font-family: 'Libre Barcode 39 Text', cursive; }
         
         .theme-green { color: #234f32; }
         .bg-theme-green { background-color: #234f32; }
@@ -46,6 +47,12 @@
         @keyframes stamp {
             0% { opacity: 0; transform: scale(3) rotate(-15deg); }
             100% { opacity: 1; transform: scale(1) rotate(-15deg); }
+        }
+
+        /* Certificate Pattern */
+        .cert-pattern {
+            background-image: radial-gradient(#c5a009 1px, transparent 1px);
+            background-size: 20px 20px;
         }
     </style>
 </head>
@@ -201,9 +208,16 @@
             const handleSavePhoto = () => {
                 const element = document.getElementById('certificate-card');
                 if (window.html2canvas) {
-                    window.html2canvas(element, { scale: 2, backgroundColor: null }).then(canvas => {
+                    // Add temporary class to ensure clean capture
+                    element.style.transform = "scale(1)"; 
+                    
+                    window.html2canvas(element, { 
+                        scale: 3, // High resolution
+                        backgroundColor: null,
+                        useCORS: true 
+                    }).then(canvas => {
                         const link = document.createElement('a');
-                        link.download = `Scout_ID_${scoutName.replace(/\s+/g, '_')}.png`;
+                        link.download = `Scout_Certificate_${scoutName.replace(/\s+/g, '_')}.png`;
                         link.href = canvas.toDataURL("image/png");
                         link.click();
                     }).catch(err => {
@@ -211,7 +225,7 @@
                         alert("Auto-save failed. Please take a screenshot manually!");
                     });
                 } else {
-                    alert("Please take a screenshot of your ID card manually.");
+                    alert("Please take a screenshot of your certificate manually.");
                 }
             };
 
@@ -247,9 +261,9 @@
             );
 
             if (view === 'dashboard') return (
-                <div className="min-h-screen pb-10">
+                <div className="min-h-screen pb-20">
                     {/* Header */}
-                    <div className="bg-white p-4 border-b border-theme-gold flex justify-between items-center sticky top-0 z-20 shadow-lg">
+                    <div className="bg-white p-4 border-b border-theme-gold flex justify-between items-center sticky top-0 z-30 shadow-lg">
                         <div>
                             <div className="text-xs text-gray-400 font-cinzel">SCOUT: {scoutName}</div>
                             <div className="font-cinzel font-bold text-lg text-theme-green">SCOUTING PROGRESS</div>
@@ -258,7 +272,7 @@
                     </div>
                     
                     {/* Meter Bar */}
-                    <div className="w-full bg-gray-200 h-4 sticky top-[73px] z-20">
+                    <div className="w-full bg-gray-200 h-4 sticky top-[73px] z-30">
                         <div 
                             className="bg-theme-green h-4 transition-all duration-1000 ease-out" 
                             style={{ width: `${getProgress()}%` }}
@@ -307,24 +321,67 @@
                             );
                         })}
 
-                        {/* Final Certification */}
+                        {/* Final Certification / ID CARD */}
                         {getProgress() === 100 && (
-                            <div className="text-center mt-8 animate-fade-in pb-10">
-                                {/* Only this part gets photographed */}
-                                <div id="certificate-card" className="bg-theme-gold p-8 rounded text-black shadow-lg border-4 border-white max-w-sm mx-auto relative overflow-hidden">
-                                     {/* Background decoration */}
-                                    <div className="absolute top-0 left-0 w-full h-2 bg-theme-green"></div>
+                            <div className="text-center mt-12 animate-fade-in pb-10">
+                                
+                                <div className="mb-4 text-theme-green font-cinzel font-bold">▼ CERTIFICATION OBTAINED ▼</div>
+
+                                {/* CERTIFICATE CONTAINER */}
+                                <div id="certificate-card" className="bg-white w-full max-w-[600px] mx-auto p-8 rounded shadow-2xl relative overflow-hidden flex flex-col items-center justify-center border-8 border-double border-theme-gold cert-pattern">
                                     
-                                    <div className="text-4xl mb-2">🎓</div>
-                                    <h2 className="text-2xl font-cinzel font-bold mb-2 text-white drop-shadow-md">READY TO FILM</h2>
-                                    <p className="font-hand text-xl mb-4 text-[#fdfbf7]">Scout {scoutName} is fully prepared.</p>
-                                    <div className="text-xs font-cinzel text-white opacity-90 mt-4 tracking-widest border-t border-white/30 pt-4">BRITISH HILLS SUMMER CAMP</div>
+                                    {/* Decorative Corner */}
+                                    <div className="absolute top-0 left-0 w-16 h-16 border-t-8 border-l-8 border-theme-green"></div>
+                                    <div className="absolute top-0 right-0 w-16 h-16 border-t-8 border-r-8 border-theme-green"></div>
+                                    <div className="absolute bottom-0 left-0 w-16 h-16 border-b-8 border-l-8 border-theme-green"></div>
+                                    <div className="absolute bottom-0 right-0 w-16 h-16 border-b-8 border-r-8 border-theme-green"></div>
+
+                                    {/* Logo */}
+                                    <img 
+                                        src="https://www.enjoybritish-hills.com/uploads/6/4/2/6/64269063/1466432519.png" 
+                                        alt="British Hills Logo" 
+                                        className="h-20 mb-6 object-contain"
+                                        crossOrigin="anonymous"
+                                    />
+
+                                    {/* Title */}
+                                    <h2 className="text-2xl md:text-3xl font-cinzel font-bold text-theme-green mb-2 tracking-wide uppercase">
+                                        Location Preparation
+                                    </h2>
+                                    <h2 className="text-xl md:text-2xl font-cinzel font-bold text-theme-gold mb-6 tracking-widest uppercase">
+                                        Completion Certificate
+                                    </h2>
+
+                                    {/* Text Body */}
+                                    <p className="font-hand text-xl text-gray-600 mb-2">This certifies that</p>
+                                    
+                                    <div className="text-4xl font-marker text-black border-b-2 border-gray-300 px-8 py-2 mb-4 w-full text-center">
+                                        {scoutName}
+                                    </div>
+
+                                    <p className="font-hand text-lg text-gray-600 mb-8 max-w-sm mx-auto leading-relaxed">
+                                        Has successfully scouted all designated zones for the British Hills Summer Camp Project.
+                                    </p>
+
+                                    {/* Signature / Date */}
+                                    <div className="flex justify-between items-end w-full max-w-xs text-center md:px-8">
+                                        <div className="flex flex-col items-center">
+                                            <div className="font-marker text-theme-green text-xl mb-1">British Hills Education</div>
+                                            <div className="w-32 border-t border-gray-400 text-xs font-cinzel text-gray-400 pt-1">AUTHORIZED BY</div>
+                                        </div>
+                                        <div className="mb-2">
+                                            <div className="border-2 border-theme-green text-theme-green font-bold px-3 py-1 rounded rotate-[-12deg] opacity-80 uppercase tracking-widest font-cinzel text-xs">
+                                                Verified
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <button onClick={handleSavePhoto} className="mt-6 w-full max-w-sm bg-theme-green text-white px-6 py-4 rounded font-bold hover:bg-[#1a3b25] font-cinzel shadow-lg flex items-center justify-center gap-2 text-lg">
-                                    📸 SAVE ID CARD PHOTO
+                                {/* Controls */}
+                                <button onClick={handleSavePhoto} className="mt-8 w-full max-w-sm bg-theme-green text-white px-6 py-4 rounded font-bold hover:bg-[#1a3b25] font-cinzel shadow-lg flex items-center justify-center gap-2 text-lg mx-auto">
+                                    📸 DOWNLOAD CERTIFICATE
                                 </button>
-                                <p className="text-gray-400 text-sm mt-2 italic">(Or take a screenshot if it doesn't save!)</p>
+                                <p className="text-gray-400 text-sm mt-2 italic">(Or screenshot this certificate!)</p>
                                 
                                 <div className="mt-6 border-t border-gray-200 pt-6">
                                      <a href="index.html" className="text-gray-400 hover:text-theme-green underline font-hand text-lg">Return to Hub</a>
