@@ -44,12 +44,13 @@
             background-size: 20px 20px;
         }
         
-        .card-lift {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        /* Smooth row hover */
+        .contact-row {
+            transition: all 0.2s ease;
         }
-        .card-lift:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        .contact-row:hover {
+            background-color: white;
+            transform: translateX(4px);
         }
 
         .custom-scroll::-webkit-scrollbar {
@@ -62,6 +63,12 @@
             background: #c5a009; 
             border-radius: 4px;
         }
+
+        /* SVG Icon animation */
+        .call-btn:hover svg {
+            transform: scale(1.1) rotate(-10deg);
+            color: #c5a009;
+        }
     </style>
 </head>
 <body class="text-hunter font-body min-h-screen flex flex-col">
@@ -69,25 +76,25 @@
     <!-- Header -->
     <header class="bg-hunter text-cream py-6 border-b-4 border-gold shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-12 md:px-4 text-center relative">
-            <!-- Back to Home Button -->
             <a href="index.html" class="absolute left-2 md:left-0 top-1/2 -translate-y-1/2 bg-cream/70 backdrop-blur-sm text-hunter hover:bg-white px-3 py-2 md:px-4 md:py-2 rounded-full font-header font-bold shadow-md flex items-center gap-2 transition-all hover:scale-105 text-sm md:text-base border border-transparent hover:border-gold z-50">
                 <span>&larr;</span> <span class="hidden sm:inline">Home</span>
             </a>
 
             <h1 class="text-3xl md:text-5xl font-header font-bold tracking-wider">Meet the Team</h1>
-            <!-- Added <br> to prevent text overlapping with the Home button on mobile -->
             <p class="font-accent text-lg md:text-xl text-gold mt-2 leading-tight">There are many staff at British Hills from all over the world.<br>Give some of them a call and have a chat!</p>
         </div>
     </header>
 
-    <main class="flex-grow container mx-auto px-4 py-8 relative">
+    <main class="flex-grow container mx-auto px-4 py-8 max-w-3xl">
 
+        <!-- CONTACT LIST VIEW -->
         <div id="gallery-view" class="transition-opacity duration-500 ease-in-out">
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="staff-grid">
-                <!-- Staff cards will be injected here via JS -->
+            <div class="bg-white/30 backdrop-blur-sm rounded-2xl border-2 border-hunter/10 overflow-hidden shadow-paper" id="staff-grid">
+                <!-- Contact rows will be injected here via JS -->
             </div>
         </div>
 
+        <!-- VIDEO CHAT INTERFACE (MODAL) -->
         <div id="chat-view" class="hidden fixed inset-0 bg-hunter/90 z-50 flex items-center justify-center p-4">
             <div class="bg-cream rounded-xl shadow-2xl w-full max-w-5xl h-[90vh] md:h-[80vh] flex flex-col md:flex-row overflow-hidden border-4 border-gold relative">
                 <button onclick="closeChat()" class="absolute top-4 left-4 z-20 bg-white/80 hover:bg-white text-hunter px-4 py-2 rounded-full font-header font-bold shadow-md flex items-center gap-2 transition-colors text-sm md:text-base">
@@ -424,41 +431,66 @@
         const chatView = document.getElementById('chat-view');
         const mainVideo = document.getElementById('main-video');
 
+        /**
+         * INITIALIZE CONTACT LIST (Smartphone Style)
+         */
         function initGallery() {
             staffGrid.innerHTML = '';
-            staffData.forEach(staff => {
-                let roleBgClass = 'bg-white';
-                if (staff.role === 'Teacher') roleBgClass = 'bg-yellow-50';
-                if (staff.role === 'Attendant') roleBgClass = 'bg-rose-50';
-                if (staff.role === 'Guest Services') roleBgClass = 'bg-blue-50';
+            
+            staffData.forEach((staff, index) => {
+                // Background colors for roles
+                let roleBgClass = 'bg-white/60';
+                let iconColor = 'text-hunter/40';
+                
+                if (staff.role === 'Teacher') roleBgClass = 'bg-yellow-50/70';
+                if (staff.role === 'Attendant') roleBgClass = 'bg-rose-50/70';
+                if (staff.role === 'Guest Services') roleBgClass = 'bg-blue-50/70';
 
-                const card = document.createElement('div');
-                card.className = `${roleBgClass} rounded-lg shadow-paper overflow-hidden card-lift border-2 border-transparent hover:border-gold cursor-pointer flex flex-col`;
-                card.onclick = () => openChat(staff.id);
+                const row = document.createElement('div');
+                row.className = `contact-row ${roleBgClass} border-b border-hunter/5 px-4 py-3 flex items-center justify-between cursor-pointer group`;
+                row.onclick = () => openChat(staff.id);
 
-                card.innerHTML = `
-                    <div class="h-64 w-full bg-hunter-dark overflow-hidden relative">
-                         <img 
-                            src="${staff.image}" 
-                            alt="${staff.name}" 
-                            class="w-full h-full object-cover"
-                            onerror="this.src='https://ui-avatars.com/api/?name=${staff.name}&background=234f32&color=fff&size=400'"
-                        >
-                        <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/60 to-transparent p-4">
+                // Initial/Avatar logic
+                const initials = staff.name.charAt(0).toUpperCase();
+                
+                row.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <!-- Round Avatar -->
+                        <div class="w-12 h-12 md:w-14 md:h-14 rounded-full overflow-hidden border-2 border-gold/30 shrink-0 bg-hunter flex items-center justify-center">
+                            <img 
+                                src="${staff.image}" 
+                                alt="${staff.name}" 
+                                class="w-full h-full object-cover"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                            >
+                            <span class="hidden text-cream font-header font-bold text-xl">${initials}</span>
+                        </div>
+                        
+                        <!-- Name & Role -->
+                        <div class="flex flex-col">
+                            <span class="text-xl md:text-2xl font-header font-bold text-hunter leading-tight">
+                                ${staff.name}
+                            </span>
+                            <span class="text-sm font-accent text-gold-dark opacity-80 uppercase tracking-widest">
+                                ${staff.role}
+                            </span>
                         </div>
                     </div>
-                    <div class="p-4 text-center">
-                        <h3 class="text-2xl font-header font-bold text-hunter">${staff.name}</h3>
-                        <p class="text-gold-dark font-accent text-lg">${staff.role}</p>
-                        <button class="mt-4 bg-hunter text-cream px-4 py-2 rounded-full font-body text-lg w-full hover:bg-hunter-dark transition-colors">
-                            Chat with ${staff.name}
-                        </button>
+
+                    <!-- Call Icon -->
+                    <div class="call-btn flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full bg-hunter/5 group-hover:bg-hunter transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-hunter group-hover:text-cream transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
                     </div>
                 `;
-                staffGrid.appendChild(card);
+                staffGrid.appendChild(row);
             });
         }
 
+        /**
+         * CHAT UI LOGIC (Remains the same as v1)
+         */
         function openChat(staffId) {
             const staff = staffData.find(s => s.id === staffId);
             if (!staff) return;
