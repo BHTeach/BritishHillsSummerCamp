@@ -23,6 +23,7 @@
                         hunter: '#234f32',
                         'hunter-dark': '#1a3b25',
                         gold: '#c5a009',
+                        danger: '#ef4444',
                     },
                     fontFamily: {
                         header: ['Cinzel', 'serif'],
@@ -31,6 +32,9 @@
                     },
                     boxShadow: {
                         'paper': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                    },
+                    animation: {
+                        'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     }
                 }
             }
@@ -69,6 +73,14 @@
             transform: scale(1.1) rotate(-10deg);
             color: #c5a009;
         }
+
+        /* Mic Button Active State */
+        .mic-listening {
+            background-color: #ef4444 !important; /* Red */
+            color: white !important;
+            animation: pulse 1.5s infinite;
+            border-color: #ef4444 !important;
+        }
     </style>
 </head>
 <body class="text-hunter font-body min-h-screen flex flex-col">
@@ -101,12 +113,14 @@
                     <span>&larr;</span> Back
                 </button>
 
+                <!-- Left Column: Video -->
                 <div class="w-full md:w-2/3 h-[35vh] md:h-auto bg-hunter-dark relative flex items-center justify-center group shrink-0">
                     <video id="main-video" class="w-full h-full object-contain md:object-cover" controls playsinline controlsList="nodownload" oncontextmenu="return false;">
                         <source src="" type="video/mp4">
                     </video>
                 </div>
 
+                <!-- Right Column: Interaction -->
                 <div class="w-full md:w-1/3 flex-1 flex flex-col bg-cream border-l-0 md:border-l-4 border-gold min-h-0">
                     <div class="p-4 md:p-6 border-b-2 border-hunter/20 bg-white shrink-0">
                         <h2 id="chat-staff-name" class="text-2xl md:text-4xl font-header font-bold text-hunter">Staff Name</h2>
@@ -114,7 +128,21 @@
                     </div>
 
                     <div class="flex-grow p-4 md:p-6 flex flex-col gap-3 md:gap-4 overflow-y-auto custom-scroll bg-cream">
-                        <p class="font-body text-base md:text-lg text-hunter/80 mb-1">Ask a question:</p>
+                        
+                        <!-- Voice Interaction Section -->
+                        <div class="bg-white border-2 border-hunter/10 rounded-lg p-3 mb-2 flex flex-col items-center text-center shadow-sm">
+                            <button id="mic-btn" class="w-14 h-14 rounded-full bg-hunter text-cream flex items-center justify-center shadow-md transition-all hover:scale-105 border-2 border-gold/50 mb-2">
+                                <!-- Mic Icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                                </svg>
+                            </button>
+                            <p id="speech-feedback" class="text-sm font-body text-hunter/70 leading-tight min-h-[1.25rem]">
+                                Click mic to ask a question
+                            </p>
+                        </div>
+
+                        <p class="font-body text-base md:text-lg text-hunter/80 mb-1">Or click a question:</p>
                         <div id="question-buttons" class="flex flex-col gap-2 md:gap-3 pb-4">
                         </div>
                     </div>
@@ -430,6 +458,11 @@
         const staffGrid = document.getElementById('staff-grid');
         const chatView = document.getElementById('chat-view');
         const mainVideo = document.getElementById('main-video');
+        const micBtn = document.getElementById('mic-btn');
+        const speechFeedback = document.getElementById('speech-feedback');
+
+        // Current Staff State for Voice Matching
+        let currentStaffId = null;
 
         /**
          * INITIALIZE CONTACT LIST (Smartphone Style)
@@ -440,7 +473,6 @@
             staffData.forEach((staff, index) => {
                 // Background colors for roles
                 let roleBgClass = 'bg-white/60';
-                let iconColor = 'text-hunter/40';
                 
                 if (staff.role === 'Teacher') roleBgClass = 'bg-yellow-50/70';
                 if (staff.role === 'Attendant') roleBgClass = 'bg-rose-50/70';
@@ -489,11 +521,13 @@
         }
 
         /**
-         * CHAT UI LOGIC (Remains the same as v1)
+         * CHAT UI LOGIC
          */
         function openChat(staffId) {
             const staff = staffData.find(s => s.id === staffId);
             if (!staff) return;
+
+            currentStaffId = staffId; // Set current staff for voice logic
 
             document.getElementById('chat-staff-name').textContent = staff.name;
             document.getElementById('chat-staff-role').textContent = staff.role;
@@ -505,16 +539,19 @@
 
             staff.questions.forEach((q, index) => {
                 const btn = document.createElement('button');
+                btn.id = `q-btn-${index}`; // Add ID for voice triggering
                 btn.className = "text-left bg-white border-2 border-hunter/20 p-3 md:p-4 rounded-lg shadow-sm hover:border-gold hover:shadow-md hover:bg-cream transition-all group w-full";
                 btn.innerHTML = `
                     <span class="block font-header font-bold text-hunter text-xs md:text-sm mb-1 group-hover:text-gold-dark">Question ${index + 1}</span>
                     <span class="font-body text-lg md:text-xl leading-tight">${q.text}</span>
                 `;
                 btn.onclick = () => {
+                    // Reset styling on all buttons
                     Array.from(questionContainer.children).forEach(b => {
                         b.classList.remove('border-gold', 'bg-cream');
                         b.classList.add('border-hunter/20', 'bg-white');
                     });
+                    // Highlight active button
                     btn.classList.remove('border-hunter/20', 'bg-white');
                     btn.classList.add('border-gold', 'bg-cream');
                     
@@ -534,6 +571,7 @@
             mainVideo.pause();
             mainVideo.currentTime = 0;
             mainVideo.src = "";
+            currentStaffId = null; // Clear state
 
             chatView.classList.add('hidden');
             galleryView.classList.remove('hidden');
@@ -550,6 +588,105 @@
                 playPromise.then(_ => {}).catch(error => {
                     console.log("Video status: " + error);
                 });
+            }
+        }
+
+        /**
+         * VOICE RECOGNITION LOGIC
+         */
+        // Check for browser support
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            micBtn.onclick = () => {
+                recognition.start();
+                micBtn.classList.add('mic-listening');
+                speechFeedback.textContent = "Listening...";
+                speechFeedback.style.color = "#c5a009"; // Gold
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript.toLowerCase();
+                speechFeedback.textContent = `I heard: "${transcript}"`;
+                speechFeedback.style.color = "#234f32"; // Hunter Green
+                
+                micBtn.classList.remove('mic-listening');
+                
+                handleVoiceCommand(transcript);
+            };
+
+            recognition.onspeechend = () => {
+                recognition.stop();
+                micBtn.classList.remove('mic-listening');
+            };
+
+            recognition.onerror = (event) => {
+                micBtn.classList.remove('mic-listening');
+                speechFeedback.textContent = "Error occurred in recognition: " + event.error;
+                speechFeedback.style.color = "#ef4444"; // Danger Red
+            };
+        } else {
+            micBtn.style.display = 'none';
+            speechFeedback.textContent = "Voice not supported on this browser.";
+        }
+
+        function handleVoiceCommand(transcript) {
+            if (!currentStaffId) return;
+
+            const staff = staffData.find(s => s.id === currentStaffId);
+            if (!staff) return;
+
+            // Simple Keyword Matching Strategy
+            // We define "unique" keywords for each question type to ensure accuracy
+            let bestMatchIndex = -1;
+            let highestScore = 0;
+
+            const stopWords = ['what', 'where', 'do', 'you', 'is', 'are', 'the', 'a', 'an', 'to', 'of', 'in', 'your', 'my', 'i', 'please', 'tell', 'me'];
+
+            staff.questions.forEach((q, index) => {
+                const questionWords = q.text.toLowerCase().replace(/[?.,]/g, '').split(' ');
+                const spokenWords = transcript.replace(/[?.,]/g, '').split(' ');
+                
+                let score = 0;
+
+                spokenWords.forEach(word => {
+                    if (stopWords.includes(word)) return; // Skip stop words
+                    if (questionWords.includes(word)) {
+                        score += 1;
+                    }
+                });
+
+                // Boost score for specific strong keywords
+                if (transcript.includes('from') && q.text.toLowerCase().includes('from')) score += 2;
+                if (transcript.includes('recommend') && q.text.toLowerCase().includes('recommend')) score += 2;
+                if (transcript.includes('food') && q.text.toLowerCase().includes('food')) score += 2;
+                if (transcript.includes('hobby') || transcript.includes('hobbies') && q.text.toLowerCase().includes('hobbies')) score += 2;
+                if (transcript.includes('football') && q.text.toLowerCase().includes('football')) score += 2;
+                if (transcript.includes('lesson') && q.text.toLowerCase().includes('lesson')) score += 2;
+                if (transcript.includes('season') && q.text.toLowerCase().includes('season')) score += 2;
+                if (transcript.includes('help') && q.text.toLowerCase().includes('help')) score += 2;
+                if (transcript.includes('english') && q.text.toLowerCase().includes('english')) score += 2;
+
+                if (score > highestScore) {
+                    highestScore = score;
+                    bestMatchIndex = index;
+                }
+            });
+
+            // Threshold: Must have at least a decent match score
+            if (highestScore >= 1 && bestMatchIndex !== -1) {
+                // Programmatically click the button to trigger video & UI updates
+                const btnToClick = document.getElementById(`q-btn-${bestMatchIndex}`);
+                if (btnToClick) btnToClick.click();
+            } else {
+                speechFeedback.textContent = `I heard: "${transcript}" (No match found)`;
+                speechFeedback.style.color = "#ef4444";
             }
         }
 
