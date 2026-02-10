@@ -123,7 +123,8 @@
             {
                 id: 'inawashiro',
                 title: 'Zone 4: Inawashiro',
-                brief: 'Heaven's Mirror. Connect nature and science.',
+                // FIX: Used double quotes here to avoid syntax error with 'Heaven's'
+                brief: "Heaven's Mirror. Connect nature and science.",
                 questions: [
                     { q: "Which famous doctor was born here?", options: ["Hideyo Noguchi", "Ken Watanabe", "Mario", "Tezuka Osamu"], answer: "Hideyo Noguchi" },
                     { q: "Lake Inawashiro's nickname is ______ Lake.", options: ["Muddy", "Heavenly Mirror", "Loch Ness", "Blue Giant"], answer: "Heavenly Mirror" },
@@ -469,4 +470,4 @@
         root.render(<App />);
     </script>
 </body>
-</html> 
+</html>
