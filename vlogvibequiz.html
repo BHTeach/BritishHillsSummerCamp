@@ -63,7 +63,10 @@
                     { text: "Fast editing, jokes, and memes.", type: "comedy" },
                     { text: "Beautiful scenery and relaxing music.", type: "aesthetic" },
                     { text: "Learning cool facts and history.", type: "docu" },
-                    { text: "Crazy challenges and loud excitement!", type: "action" }
+                    { text: "Crazy challenges and loud excitement!", type: "action" },
+                    { text: "Feeling like I'm hanging out with a friend.", type: "bestie" },
+                    { text: "Watching people try amazing local food.", type: "foodie" },
+                    { text: "Short, trending challenges and catchy sounds.", type: "trendsetter" }
                 ]
             },
             {
@@ -73,7 +76,10 @@
                     { text: "Me pretending to be a samurai fighting a ghost.", type: "comedy" },
                     { text: "A slow-motion pan of the red roof tiles.", type: "aesthetic" },
                     { text: "Explaining the history of the White Tigers.", type: "docu" },
-                    { text: "Running up the stairs to the top!", type: "action" }
+                    { text: "Running up the stairs to the top!", type: "action" },
+                    { text: "A selfie-style video sharing my genuine reaction.", type: "bestie" },
+                    { text: "A close-up of a samurai-themed snack nearby.", type: "foodie" },
+                    { text: "A viral dance in front of the castle.", type: "trendsetter" }
                 ]
             },
             {
@@ -83,7 +89,10 @@
                     { text: "Goofy sound effects & upbeat pop.", type: "comedy" },
                     { text: "Lo-Fi Beats to Study/Relax to.", type: "aesthetic" },
                     { text: "Classical or cinematic orchestral.", type: "docu" },
-                    { text: "High-tempo rock or EDM.", type: "action" }
+                    { text: "High-tempo rock or EDM.", type: "action" },
+                    { text: "Acoustic or no music, just chatting.", type: "bestie" },
+                    { text: "Cafe and restaurant-style music.", type: "foodie" },
+                    { text: "The latest trending TikTok audio.", type: "trendsetter" }
                 ]
             },
             {
@@ -93,7 +102,10 @@
                     { text: "I want them to laugh!", type: "comedy" },
                     { text: "I want them to wish they were there.", type: "aesthetic" },
                     { text: "I want them to learn something new.", type: "docu" },
-                    { text: "I want them to feel pumped up!", type: "action" }
+                    { text: "I want them to feel pumped up!", type: "action" },
+                    { text: "I want them to feel like my close friend.", type: "bestie" },
+                    { text: "I want them to feel incredibly hungry.", type: "foodie" },
+                    { text: "I want them to immediately hit the share button.", type: "trendsetter" }
                 ]
             },
             {
@@ -103,7 +115,10 @@
                     { text: "Keep it in the video! It's funny!", type: "comedy" },
                     { text: "Cut it out. We need perfection.", type: "aesthetic" },
                     { text: "Explain why it happened. It's part of the process.", type: "docu" },
-                    { text: "Quickly film a reaction shot!", type: "action" }
+                    { text: "Quickly film a reaction shot!", type: "action" },
+                    { text: "Laugh it off and make it a bonding moment.", type: "bestie" },
+                    { text: "If they didn't drop the food, we're good!", type: "foodie" },
+                    { text: "Turn it into a quick, relatable meme clip.", type: "trendsetter" }
                 ]
             }
         ];
@@ -140,11 +155,34 @@
                 icon: "🚀",
                 color: "text-red-600",
                 tips: ["Use 'POV' (Point of View) shots.", "Walk while you talk.", "Keep the music loud and fast."]
+            },
+            bestie: {
+                title: "The Bestie",
+                subtitle: "Casual & Relatable",
+                desc: "You make your audience feel like they are traveling right alongside a close friend. It's not about perfect lighting; it's about authenticity, raw reactions, and casual chats directly to the camera.",
+                icon: "☕",
+                color: "text-amber-700",
+                tips: ["Film in 'Selfie Mode' while walking.", "Talk about your genuine feelings and reactions.", "Keep the awkward/funny mistakes in the video."]
+            },
+            foodie: {
+                title: "The Foodie",
+                subtitle: "Local Tastes & Culture",
+                desc: "You believe the best way to understand a place is through its food! Your vlogs focus on cafes, street food vendors, and the sensory experience of traveling. You make sure the audience eats with their eyes.",
+                icon: "🍜",
+                color: "text-amber-500",
+                tips: ["Capture close-up, macro shots of food and snacks.", "Seek out the shops and stalls selling local specialties.", "Always film your authentic 'first bite' reaction."]
+            },
+            trendsetter: {
+                title: "The Trendsetter",
+                subtitle: "Viral & Fast-Paced",
+                desc: "You speak the language of the algorithm (think TikTok/Reels). You love trendy audio, quick transitions, and highly engaging hooks. Your content is optimized for short attention spans and maximum shareability.",
+                icon: "📱",
+                color: "text-fuchsia-600",
+                tips: ["Keep individual clips under 3 seconds.", "Use dynamic, physical transitions (like covering the lens).", "Sync your edits perfectly to the beat of the music."]
             }
         };
 
         // --- Components ---
-
         const ProgressBar = ({ current, total }) => {
             const width = ((current) / total) * 100;
             return (
@@ -160,7 +198,11 @@
         const App = () => {
             const [screen, setScreen] = useState('start'); // start, quiz, result
             const [currentQuestion, setCurrentQuestion] = useState(0);
-            const [scores, setScores] = useState({ comedy: 0, aesthetic: 0, docu: 0, action: 0 });
+            
+            // Updated state to track all 7 vibes
+            const [scores, setScores] = useState({ 
+                comedy: 0, aesthetic: 0, docu: 0, action: 0, bestie: 0, foodie: 0, trendsetter: 0 
+            });
             const [finalResult, setFinalResult] = useState(null);
 
             const handleStart = () => {
@@ -179,7 +221,6 @@
             };
 
             const calculateResult = (finalScores) => {
-                // Find the key with the highest value
                 let maxScore = 0;
                 let resultType = 'comedy'; // default
                 
@@ -195,7 +236,7 @@
             };
 
             const restart = () => {
-                setScores({ comedy: 0, aesthetic: 0, docu: 0, action: 0 });
+                setScores({ comedy: 0, aesthetic: 0, docu: 0, action: 0, bestie: 0, foodie: 0, trendsetter: 0 });
                 setCurrentQuestion(0);
                 setScreen('start');
             };
@@ -216,7 +257,7 @@
                                 <p className="text-xl text-gray-600 font-marker">Discover your unique filmmaking style for the Fukushima project.</p>
                             </div>
                             <div className="p-6 bg-white rounded-lg shadow-lg border border-gray-100 transform rotate-1">
-                                <p className="text-lg text-gray-500 mb-4">Are you a comedian? An artist? A historian?</p>
+                                <p className="text-lg text-gray-500 mb-4">Are you a comedian? An artist? A trendsetter?</p>
                                 <button 
                                     onClick={handleStart}
                                     className="w-full bg-theme-green text-white font-cinzel font-bold py-4 px-8 rounded shadow hover:bg-[#1a3b25] transition-transform hover:scale-105"
@@ -227,8 +268,9 @@
                         </div>
                     )}
 
+                    {}
                     {screen === 'quiz' && (
-                        <div className="w-full fade-in">
+                        <div className="w-full fade-in pb-10">
                             <div className="flex justify-between items-end mb-2 font-cinzel text-sm text-theme-green font-bold">
                                 <span>Question {currentQuestion + 1}</span>
                                 <span>{questions.length} Total</span>
@@ -255,8 +297,9 @@
                         </div>
                     )}
 
+                    {}
                     {screen === 'result' && results[finalResult] && (
-                        <div className="text-center w-full slide-up">
+                        <div className="text-center w-full slide-up pb-10">
                             <div className="bg-white rounded-lg shadow-2xl overflow-hidden border-b-8 border-theme-green">
                                 <div className="bg-theme-green p-6 text-white relative overflow-hidden">
                                     <div className="absolute top-0 right-0 text-8xl opacity-10 transform translate-x-4 -translate-y-4">
@@ -290,12 +333,6 @@
                                         >
                                             Retake Quiz
                                         </button>
-                                    </div>
-                                    
-                                    <div className="mt-6 pt-6 border-t border-gray-100">
-                                        <a href="index.html" className="text-gray-500 hover:text-theme-green font-bold transition-colors">
-                                            ← Back to Hub
-                                        </a>
                                     </div>
                                 </div>
                             </div>
